@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { useRef, useEffect } from '@wordpress/element';
 import {
 	useBlockProps,
 	MediaUpload,
@@ -11,17 +12,15 @@ import {
 	Button,
 	TextControl,
 	RangeControl,
+	ToggleControl,
 } from '@wordpress/components';
 
-function ComparePreview({ slide, position }) {
-	const isMain = position === 'main';
+function ComparePreview({ slide }) {
 	const before = slide.beforeUrl;
 	const after = slide.afterUrl;
-	const classes =
-		's2e-transformation__compare s2e-compare' + (isMain ? ' is-main' : ' is-peek');
 
 	return (
-		<div className={classes} {...(isMain ? { 'data-s2e-compare': '1' } : {})}>
+		<div className="s2e-transformation__compare s2e-compare" data-s2e-compare="1">
 			<div className="s2e-compare__inner">
 				<div className="s2e-compare__layer s2e-compare__before">
 					{before ? <img src={before} alt="" /> : null}
@@ -32,13 +31,11 @@ function ComparePreview({ slide, position }) {
 				>
 					{after ? <img src={after} alt="" /> : null}
 				</div>
-				{isMain ? (
-					<div className="s2e-compare__handle" role="presentation" tabIndex={-1}>
-						<span className="s2e-compare__handle-knob" aria-hidden="true">
-							<span className="s2e-compare__handle-arrows">&lt; &gt;</span>
-						</span>
-					</div>
-				) : null}
+				<div className="s2e-compare__handle" role="presentation" tabIndex={-1}>
+					<span className="s2e-compare__handle-knob" aria-hidden="true">
+						<span className="s2e-compare__handle-arrows">{'\u2039\u203A'}</span>
+					</span>
+				</div>
 				<span className="s2e-transformation__badge s2e-transformation__badge--before">
 					{slide.beforeLabel || __('Before', 'six2eight-elements')}
 				</span>
@@ -51,16 +48,34 @@ function ComparePreview({ slide, position }) {
 }
 
 export default function Edit({ attributes, setAttributes }) {
-	const { headlinePrefix, headlineAccent, subheadline, slides, mainIndex } = attributes;
+	const {
+		headlinePrefix,
+		headlineAccent,
+		subheadline,
+		slides,
+		mainIndex,
+		showHeader = true,
+	} = attributes;
 
+	const sectionClass =
+		's2e-transformation s2e-transformation--editor' +
+		(showHeader === false ? ' s2e-transformation--header-off' : '');
+
+	const ref = useRef(null);
 	const blockProps = useBlockProps({
-		className: 's2e-transformation s2e-transformation--editor',
+		ref,
+		className: sectionClass,
+		'data-s2e-transformation': '1',
 	});
 
 	const count = slides.length || 1;
 	const idx = Math.max(0, Math.min(mainIndex, count - 1));
-	const prev = (idx - 1 + count) % count;
-	const next = (idx + 1) % count;
+
+	useEffect(() => {
+		if (typeof window !== 'undefined' && window.s2eEightReinitInScope && ref.current) {
+			window.s2eEightReinitInScope(ref.current);
+		}
+	}, [slides, mainIndex, showHeader]);
 
 	const updateSlide = (index, patch) => {
 		const nextSlides = slides.map((row, i) =>
@@ -97,11 +112,23 @@ export default function Edit({ attributes, setAttributes }) {
 	};
 
 	return (
-		<section {...blockProps}>
+		<section
+			{...blockProps}
+			data-s2e-slide-count={String(count)}
+			data-s2e-initial-slide={String(idx)}
+			data-s2e-autoplay-ms="5000"
+		>
 			<InspectorControls>
+				<PanelBody title={__('Layout', 'six2eight-elements')} initialOpen>
+					<ToggleControl
+						label={__('Show header (headline + sub)', 'six2eight-elements')}
+						checked={showHeader !== false}
+						onChange={(v) => setAttributes({ showHeader: v })}
+					/>
+				</PanelBody>
 				<PanelBody title={__('Slides', 'six2eight-elements')} initialOpen>
 					<RangeControl
-						label={__('Center slide index', 'six2eight-elements')}
+						label={__('Initial centered slide', 'six2eight-elements')}
 						min={0}
 						max={Math.max(0, count - 1)}
 						value={idx}
@@ -178,42 +205,77 @@ export default function Edit({ attributes, setAttributes }) {
 			</InspectorControls>
 
 			<div className="s2e-transformation__inner">
-				<header className="s2e-transformation__header">
-					<h2 className="s2e-transformation__headline">
+				{showHeader !== false ? (
+					<header className="s2e-transformation__header">
+						<h2 className="s2e-transformation__headline">
+							<RichText
+								tagName="span"
+								className="s2e-transformation__headline-sans"
+								value={headlinePrefix}
+								onChange={(v) => setAttributes({ headlinePrefix: v })}
+								placeholder={__('See the', 'six2eight-elements')}
+								allowedFormats={[]}
+							/>
+							<RichText
+								tagName="span"
+								className="s2e-transformation__headline-serif"
+								value={headlineAccent}
+								onChange={(v) => setAttributes({ headlineAccent: v })}
+								placeholder={__('Transformation', 'six2eight-elements')}
+								allowedFormats={[]}
+							/>
+						</h2>
 						<RichText
-							tagName="span"
-							className="s2e-transformation__headline-sans"
-							value={headlinePrefix}
-							onChange={(v) => setAttributes({ headlinePrefix: v })}
-							placeholder={__('See the', 'six2eight-elements')}
-							allowedFormats={[]}
+							tagName="p"
+							className="s2e-transformation__sub"
+							value={subheadline}
+							onChange={(v) => setAttributes({ subheadline: v })}
+							placeholder={__('Supporting copy', 'six2eight-elements')}
 						/>
-						<RichText
-							tagName="span"
-							className="s2e-transformation__headline-serif"
-							value={headlineAccent}
-							onChange={(v) => setAttributes({ headlineAccent: v })}
-							placeholder={__('Transformation', 'six2eight-elements')}
-							allowedFormats={[]}
-						/>
-					</h2>
-					<RichText
-						tagName="p"
-						className="s2e-transformation__sub"
-						value={subheadline}
-						onChange={(v) => setAttributes({ subheadline: v })}
-						placeholder={__('Supporting copy', 'six2eight-elements')}
-					/>
-				</header>
+					</header>
+				) : null}
 
-				<div className="s2e-transformation__track" data-s2e-track>
-					{count > 1 ? (
-						<ComparePreview slide={slides[prev]} position="peek" />
-					) : null}
-					<ComparePreview slide={slides[idx]} position="main" />
-					{count > 1 ? (
-						<ComparePreview slide={slides[next]} position="peek" />
-					) : null}
+				<div
+					className={
+						's2e-transformation__track' +
+						(count <= 1 ? ' s2e-transformation__track--single' : '')
+					}
+					data-s2e-track
+				>
+					<div className="swiper s2e-transformation__swiper" data-s2e-transformation-swiper>
+						<div className="swiper-wrapper">
+							{slides.map((slide, i) => (
+								<div className="swiper-slide" key={i}>
+									<ComparePreview slide={slide} />
+								</div>
+							))}
+						</div>
+					</div>
+					<nav
+						className="s2e-transformation__nav"
+						data-s2e-transformation-nav
+						aria-label={__('Project slides', 'six2eight-elements')}
+					>
+						<button
+							type="button"
+							className="s2e-transformation__nav-btn s2e-transformation__nav-btn--prev"
+							data-s2e-swiper-prev
+							aria-label={__('Previous slide', 'six2eight-elements')}
+						>
+							<span aria-hidden="true">&#8249;</span>
+						</button>
+						<span className="s2e-transformation__nav-fraction" aria-live="polite">
+							<span data-s2e-current>1</span> / <span data-s2e-total>{count}</span>
+						</span>
+						<button
+							type="button"
+							className="s2e-transformation__nav-btn s2e-transformation__nav-btn--next"
+							data-s2e-swiper-next
+							aria-label={__('Next slide', 'six2eight-elements')}
+						>
+							<span aria-hidden="true">&#8250;</span>
+						</button>
+					</nav>
 				</div>
 			</div>
 		</section>

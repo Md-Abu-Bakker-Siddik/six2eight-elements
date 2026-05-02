@@ -6,7 +6,7 @@
 	"title": "Six2eight Project Steps",
 	"category": "widgets",
 	"icon": "list-view",
-	"description": "Vertical process timeline with featured image.",
+	"description": "Vertical process timeline with accent and main headings.",
 	"textdomain": "six2eight-elements",
 	"supports": {
 		"align": [
@@ -28,43 +28,31 @@
 			"type": "string",
 			"default": "for Floors That Last"
 		},
-		"mediaId": {
-			"type": "number",
-			"default": 0
-		},
-		"mediaUrl": {
-			"type": "string",
-			"default": ""
-		},
-		"mediaAlt": {
-			"type": "string",
-			"default": ""
-		},
 		"steps": {
 			"type": "array",
 			"default": [
 				{
 					"number": "",
-					"title": "Consultation",
-					"description": "We assess your space and recommend the best coating system.",
+					"title": "Surface Preparation",
+					"description": "We begin by deep-cleaning the surface to remove contaminants and ensure a strong bond.",
 					"active": true
 				},
 				{
 					"number": "",
-					"title": "Surface Prep",
-					"description": "Proper preparation ensures adhesion and a lasting finish.",
+					"title": "Surface Readiness",
+					"description": "Once prepped, we assess and refine the surface so it is ready for the coating system.",
 					"active": true
 				},
 				{
 					"number": "",
-					"title": "Application",
-					"description": "Materials are applied to manufacturer specifications.",
+					"title": "System Application",
+					"description": "A specialized primer is applied, followed by the topcoat layers to specification.",
 					"active": false
 				},
 				{
 					"number": "",
-					"title": "Final Walkthrough",
-					"description": "We review care instructions and warranty details with you.",
+					"title": "Cure & Set",
+					"description": "Unlike traditional systems, this process cures efficiently so you can return to use sooner.",
 					"active": false
 				}
 			]

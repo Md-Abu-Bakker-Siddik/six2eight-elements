@@ -32,6 +32,10 @@
 			"type": "string",
 			"default": "See how homeowners across the region are transforming garages, driveways, and outdoor areas into cleaner, safer, more usable spaces."
 		},
+		"showHeader": {
+			"type": "boolean",
+			"default": true
+		},
 		"mainIndex": {
 			"type": "number",
 			"default": 0
