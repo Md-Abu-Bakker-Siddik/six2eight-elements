@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "six2eight/transformation-slider",
+	"version": "1.0.0",
+	"title": "Six2eight Transformation Slider",
+	"category": "widgets",
+	"icon": "slides",
+	"description": "Before and after image comparison with optional gallery context.",
+	"textdomain": "six2eight-elements",
+	"supports": {
+		"align": [
+			"wide",
+			"full"
+		],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"attributes": {
+		"headlinePrefix": {
+			"type": "string",
+			"default": "See the"
+		},
+		"headlineAccent": {
+			"type": "string",
+			"default": "Transformation"
+		},
+		"subheadline": {
+			"type": "string",
+			"default": "See how homeowners across the region are transforming garages, driveways, and outdoor areas into cleaner, safer, more usable spaces."
+		},
+		"mainIndex": {
+			"type": "number",
+			"default": 0
+		},
+		"slides": {
+			"type": "array",
+			"default": [
+				{
+					"beforeId": 0,
+					"beforeUrl": "",
+					"afterId": 0,
+					"afterUrl": "",
+					"beforeLabel": "Before",
+					"afterLabel": "After"
+				}
+			]
+		}
+	},
+	"editorScript": "file:./build/index.js"
+}

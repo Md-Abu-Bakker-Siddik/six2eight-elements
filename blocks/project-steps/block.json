@@ -1,0 +1,74 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "six2eight/project-steps",
+	"version": "1.0.0",
+	"title": "Six2eight Project Steps",
+	"category": "widgets",
+	"icon": "list-view",
+	"description": "Vertical process timeline with featured image.",
+	"textdomain": "six2eight-elements",
+	"supports": {
+		"align": [
+			"wide",
+			"full"
+		],
+		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"attributes": {
+		"accentText": {
+			"type": "string",
+			"default": "A Proven Process"
+		},
+		"headingText": {
+			"type": "string",
+			"default": "for Floors That Last"
+		},
+		"mediaId": {
+			"type": "number",
+			"default": 0
+		},
+		"mediaUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"mediaAlt": {
+			"type": "string",
+			"default": ""
+		},
+		"steps": {
+			"type": "array",
+			"default": [
+				{
+					"number": "",
+					"title": "Consultation",
+					"description": "We assess your space and recommend the best coating system.",
+					"active": true
+				},
+				{
+					"number": "",
+					"title": "Surface Prep",
+					"description": "Proper preparation ensures adhesion and a lasting finish.",
+					"active": true
+				},
+				{
+					"number": "",
+					"title": "Application",
+					"description": "Materials are applied to manufacturer specifications.",
+					"active": false
+				},
+				{
+					"number": "",
+					"title": "Final Walkthrough",
+					"description": "We review care instructions and warranty details with you.",
+					"active": false
+				}
+			]
+		}
+	},
+	"editorScript": "file:./build/index.js"
+}
