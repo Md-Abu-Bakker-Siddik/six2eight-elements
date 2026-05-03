@@ -1,29 +1,42 @@
 import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { isEmpty } from '@wordpress/rich-text';
+import { stripRichTextSoftBreaks } from './utils';
 
 export default function save({ attributes }) {
 	const { accentText, headingText, steps } = attributes;
+	const stepList = Array.isArray(steps) ? steps : [];
 
 	const blockProps = useBlockProps.save({
 		className: 's2e-project-steps',
 	});
 
+	const hasAccent = !isEmpty(accentText);
+	const hasHeading = !isEmpty(headingText);
+	const showHeader = hasAccent || hasHeading;
+
 	return (
 		<section {...blockProps}>
 			<div className="s2e-project-steps__inner">
-				<header className="s2e-project-steps__header">
-					<RichText.Content
-						tagName="p"
-						className="s2e-project-steps__accent"
-						value={accentText}
-					/>
-					<RichText.Content
-						tagName="h2"
-						className="s2e-project-steps__heading"
-						value={headingText}
-					/>
-				</header>
+				{showHeader ? (
+					<header className="s2e-project-steps__header">
+						{hasAccent ? (
+							<RichText.Content
+								tagName="p"
+								className="s2e-project-steps__accent"
+								value={stripRichTextSoftBreaks(accentText)}
+							/>
+						) : null}
+						{hasHeading ? (
+							<RichText.Content
+								tagName="h2"
+								className="s2e-project-steps__heading"
+								value={stripRichTextSoftBreaks(headingText)}
+							/>
+						) : null}
+					</header>
+				) : null}
 				<div className="s2e-project-steps__timeline">
-					{steps.map((step, index) => {
+					{stepList.map((step, index) => {
 						const num =
 							step.number && String(step.number).trim() !== ''
 								? step.number
@@ -39,7 +52,7 @@ export default function save({ attributes }) {
 									<RichText.Content
 										tagName="h3"
 										className="s2e-project-steps__step-title"
-										value={step.title}
+										value={stripRichTextSoftBreaks(step.title)}
 									/>
 									<RichText.Content
 										tagName="p"

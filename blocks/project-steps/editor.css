@@ -1,0 +1,59 @@
+/**
+ * Project Steps — block editor only (canvas).
+ * Theme global styles often force dark text on p/h2; parent Group may be dark.
+ */
+
+/* Step numbers: always visible in editor so new / inactive rows are obvious */
+.s2e-project-steps--editor .s2e-project-steps__item:not(.is-active) .s2e-project-steps__number {
+	visibility: visible;
+	pointer-events: auto;
+	opacity: 0.55;
+}
+
+/* Header rich text: keep readable on dark section backgrounds */
+.s2e-project-steps--editor .s2e-project-steps__header .block-editor-rich-text__editable {
+	color: #ffffff !important;
+}
+
+.s2e-project-steps--editor .s2e-project-steps__accent.block-editor-rich-text__editable {
+	font-family: var(--s2e-font-serif, "Cormorant Garamond", Georgia, serif);
+}
+
+/* Step body: light panel so WP TextControl / Toggle / links match admin UI */
+.s2e-project-steps--editor .s2e-project-steps__body {
+	background: #f0f0f1;
+	border-radius: 8px;
+	padding: 12px 14px 10px;
+	margin-top: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	color: #1e1e1e;
+}
+
+.s2e-project-steps--editor .s2e-project-steps__body .components-base-control__label,
+.s2e-project-steps--editor .s2e-project-steps__body .components-toggle-control__label {
+	color: #1e1e1e;
+}
+
+.s2e-project-steps--editor .s2e-project-steps__body .block-editor-rich-text__editable {
+	color: #1e1e1e !important;
+}
+
+.s2e-project-steps--editor .s2e-project-steps__item:not(.is-active) .s2e-project-steps__body .block-editor-rich-text__editable {
+	color: #4a4a4a !important;
+}
+
+.s2e-project-steps--editor .s2e-project-steps__body .block-editor-rich-text__editable[data-placeholder]::before {
+	color: rgba(30, 30, 30, 0.45);
+	opacity: 1;
+}
+
+.s2e-project-steps--editor .s2e-project-steps__body .components-button.is-link {
+	color: #b32d2e;
+}
+
+.s2e-project-steps--editor .s2e-project-steps__body .components-text-control__input,
+.s2e-project-steps--editor .s2e-project-steps__body .components-text-control__input:focus {
+	color: #1e1e1e;
+	background: #fff;
+	border-color: #949494;
+}

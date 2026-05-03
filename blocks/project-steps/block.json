@@ -58,5 +58,6 @@
 			]
 		}
 	},
-	"editorScript": "file:./build/index.js"
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./editor.css"
 }

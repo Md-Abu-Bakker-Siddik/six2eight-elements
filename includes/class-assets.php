@@ -62,7 +62,7 @@ class S2E_Elements_Assets {
 
 		wp_register_style(
 			'six2eight-elements-fonts',
-			'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap',
+			'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Manrope:wght@300;400;500;600;700;800&display=swap',
 			array(),
 			null
 		);

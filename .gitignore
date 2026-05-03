@@ -1,0 +1,11 @@
+# Dependencies (do not commit; may contain large vendor data)
+**/node_modules/
+
+# Logs & OS
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/

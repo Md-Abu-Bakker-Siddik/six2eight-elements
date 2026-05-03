@@ -462,20 +462,31 @@ class S2E_Project_Steps extends Widget_Base {
 		$this->add_responsive_control(
 			'step_spacing',
 			array(
-				'label'      => esc_html__( 'Space Between Steps', 'six2eight-elements' ),
-				'type'       => Controls_Manager::SLIDER,
-				'size_units' => array( 'px' ),
-				'range'      => array(
+				'label'                => esc_html__( 'Space Between Steps', 'six2eight-elements' ),
+				'description'          => esc_html__( 'Set separately for desktop, tablet, and mobile in the responsive icons.', 'six2eight-elements' ),
+				'type'                 => Controls_Manager::SLIDER,
+				'size_units'           => array( 'px' ),
+				'devices'              => array( 'desktop', 'tablet', 'mobile' ),
+				'frontend_available'   => true,
+				'range'                => array(
 					'px' => array(
 						'min' => 0,
-						'max' => 80,
+						'max' => 160,
 					),
 				),
-				'default'    => array(
-					'size' => 28,
+				'default'              => array(
+					'size' => 120,
 					'unit' => 'px',
 				),
-				'selectors'  => array(
+				'tablet_default'       => array(
+					'size' => 72,
+					'unit' => 'px',
+				),
+				'mobile_default'       => array(
+					'size' => 48,
+					'unit' => 'px',
+				),
+				'selectors'            => array(
 					'{{WRAPPER}} .s2e-project-steps__item + .s2e-project-steps__item' => 'margin-top: {{SIZE}}{{UNIT}};',
 				),
 			)

@@ -29,24 +29,32 @@
 	--s2e-steps-inactive-desc: rgba(255, 255, 255, 0.36);
 	--s2e-steps-number-bg: #ffffff;
 	--s2e-steps-number-fg: #0a1921;
+	--s2e-steps-item-gap: 120px;
+	--s2e-font-sans: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--s2e-font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
 }
 
 .s2e-project-steps {
 	--s2e-steps-line: rgba(255, 255, 255, 0.38);
 	color: #fff;
-	font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-family: var(--s2e-font-sans);
 	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
 }
 
 .s2e-project-steps__inner {
 	margin: 0 auto;
 	width: 100%;
+	max-width: 100%;
+	min-width: 0;
 	box-sizing: border-box;
 }
 
 .s2e-project-steps__accent {
 	margin: 0 0 10px;
-	font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+	font-family: var(--s2e-font-serif);
 	font-style: italic;
 	font-weight: 500;
 	font-size: clamp(1.25rem, 2.2vw, 1.85rem);
@@ -96,7 +104,7 @@
 }
 
 .s2e-project-steps__item+.s2e-project-steps__item {
-	margin-top: 32px;
+	margin-top: var(--s2e-steps-item-gap);
 }
 
 .s2e-project-steps__marker {
@@ -117,7 +125,7 @@
 	height: var(--s2e-steps-marker-w);
 	padding: 0 8px;
 	border-radius: 8px;
-	background: var(--s2e-steps-number-bg);
+	background: #EFF6FB;
 	color: var(--s2e-steps-number-fg);
 	font-weight: 700;
 	font-size: 0.8125rem;
@@ -141,7 +149,7 @@
 
 .s2e-project-steps__step-title {
 	margin: 0px 0 15px;
-	font-size: 1.0625rem;
+	font-size: 1.5rem;
 	font-weight: 700;
 	line-height: 1.3;
 	letter-spacing: 0.01em;
@@ -152,7 +160,7 @@
 	font-size: 1.09rem;
 	line-height: 1.68;
 	font-weight: 400;
-	padding-right: 50px;
+	max-width: 497px;
 }
 
 .s2e-project-steps__item.is-active .s2e-project-steps__step-title {
@@ -172,6 +180,10 @@
 }
 
 .s2e-transformation {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 100%;
+	overflow-x: clip;
 }
 
 .s2e-transformation__inner {
@@ -198,7 +210,7 @@
 }
 
 .s2e-transformation__headline-serif {
-	font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+	font-family: var(--s2e-font-serif);
 	font-style: italic;
 	font-weight: 600;
 	color: var(--s2e-brand-navy);
@@ -349,7 +361,7 @@
 	gap: 22px;
 	margin-top: 4px;
 	padding: 14px 0 6px;
-	font-family: "Montserrat", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-family: var(--s2e-font-sans);
 	font-size: 0.95rem;
 	font-weight: 600;
 	color: var(--s2e-brand-navy);
@@ -495,7 +507,7 @@
 .s2e-compare__handle-arrows {
 	letter-spacing: 0.35em;
 	margin-right: -0.2em;
-	font-family: "Montserrat", system-ui, sans-serif;
+	font-family: var(--s2e-font-sans);
 	font-weight: 600;
 }
 
@@ -534,16 +546,232 @@
 	}
 }
 
-@media (max-width: 768px) {
+/* -------------------------------------------------------------------------
+   Responsive — narrow / touch (aligns with common ~768px tablet breakpoint)
+   ------------------------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+	.s2e-project-steps {
+		--s2e-steps-item-gap: 72px;
+		--s2e-steps-marker-gap: 28px;
+	}
+}
+
+@media (max-width: 767px) {
+	.s2e-project-steps {
+		--s2e-steps-item-gap: 48px;
+		--s2e-steps-marker-gap: 16px;
+		--s2e-steps-marker-w: 40px;
+		--s2e-steps-line-inset-y: 18px;
+	}
+
+	.s2e-project-steps__step-title {
+		font-size: clamp(1.05rem, 4vw, 1.35rem);
+		margin-bottom: 10px;
+	}
+
+	.s2e-project-steps__step-desc {
+		font-size: 1rem;
+		line-height: 1.55;
+		max-width: 100%;
+		padding-right: 0;
+	}
+
+	.s2e-project-steps__body {
+		padding-right: 0;
+	}
+
+	.s2e-transformation__viewport {
+		width: 100%;
+		max-width: 100%;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
 	[data-s2e-slide] {
-		width: 80cqi;
+		width: 86cqi;
+		padding: 0 4px;
+	}
+
+	.s2e-transformation__cell.is-active .s2e-transformation__compare {
+		padding: 10px;
+	}
+
+	.s2e-transformation__badge {
+		font-size: 0.95rem;
+		padding: 8px 18px;
+		top: 10px;
+	}
+
+	.s2e-transformation__badge--before {
+		left: 8px;
+	}
+
+	.s2e-transformation__badge--after {
+		right: 8px;
+	}
+
+	.s2e-compare__handle {
+		width: 44px;
+		margin-left: -22px;
+	}
+
+	.s2e-compare__handle-knob {
+		width: 40px;
+		height: 40px;
+		font-size: 0.9rem;
+	}
+
+	.s2e-transformation__nav {
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 12px;
+		row-gap: 8px;
+		padding: 10px 0 4px;
+	}
+
+	.s2e-transformation__header {
+		margin-bottom: 28px;
+	}
+
+	.s2e-transformation__sub {
+		font-size: 0.9rem;
+	}
+
+	.s2e-transformation__headline {
+		overflow-wrap: anywhere;
+	}
+}
+
+@media (max-width: 480px) {
+	.s2e-project-steps {
+		--s2e-steps-item-gap: 36px;
+		--s2e-steps-marker-gap: 12px;
+		--s2e-steps-marker-w: 36px;
+	}
+
+	.s2e-project-steps__number {
+		min-width: 36px;
+		height: 36px;
+		font-size: 0.72rem;
+		padding: 0 6px;
+	}
+
+	[data-s2e-slide] {
+		width: 94cqi;
+		padding: 0 2px;
+	}
+
+	.s2e-transformation__nav-btn {
+		min-width: 44px;
+		min-height: 44px;
 	}
 }
 
 @supports not (width: 1cqi) {
-	@media (max-width: 768px) {
+	@media (max-width: 767px) {
 		[data-s2e-slide] {
-			width: 80%;
+			width: 86%;
 		}
 	}
+
+	@media (max-width: 480px) {
+		[data-s2e-slide] {
+			width: 94%;
+		}
+	}
+}
+
+/*
+ * Elementor: at ~320px a flex column child often keeps min-width:auto, so the
+ * column / widget cannot shrink and leaves a white strip. Allow shrink + full track width.
+ */
+.elementor-widget-s2e-project-steps,
+.elementor-widget-s2e-transformation-slider {
+	min-width: 0;
+	width: 100%;
+	max-width: 100%;
+}
+
+.elementor-widget-s2e-project-steps .elementor-widget-container,
+.elementor-widget-s2e-transformation-slider .elementor-widget-container {
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
+@media (max-width: 767px) {
+	.elementor-column > .elementor-widget-wrap > .elementor-widget.elementor-widget-s2e-project-steps,
+	.elementor-column > .elementor-widget-wrap > .elementor-widget.elementor-widget-s2e-transformation-slider,
+	.elementor-column .elementor-widget-wrap .elementor-widget.elementor-widget-s2e-project-steps,
+	.elementor-column .elementor-widget-wrap .elementor-widget.elementor-widget-s2e-transformation-slider {
+		min-width: 0;
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.e-con .elementor-widget.elementor-widget-s2e-project-steps,
+	.e-con .elementor-widget.elementor-widget-s2e-transformation-slider {
+		min-width: 0;
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.elementor-element.elementor-widget-s2e-project-steps .s2e-project-steps__inner {
+		max-width: 100%;
+	}
+
+	/* Full-bleed viewport math is relative to the column in Elementor; keep slider track column-wide. */
+	.elementor-widget-s2e-transformation-slider .s2e-transformation__viewport {
+		width: 100%;
+		max-width: 100%;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.elementor-widget-s2e-transformation-slider .s2e-transformation__inner,
+	.elementor-widget-s2e-transformation-slider .s2e-transformation__track,
+	.elementor-widget-s2e-transformation-slider .s2e-transformation__rack {
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
+	}
+
+	.elementor-column .elementor-widget.elementor-widget-s2e-transformation-slider,
+	.elementor-column .elementor-widget.elementor-widget-s2e-project-steps {
+		align-self: stretch;
+		flex-grow: 1;
+	}
+}
+
+@media (max-width: 480px) {
+	/* Last resort when a column still leaves a side gutter on very narrow viewports. */
+	.elementor-column .elementor-widget.elementor-widget-s2e-transformation-slider,
+	.elementor-column .elementor-widget.elementor-widget-s2e-project-steps {
+		width: 100% !important;
+		max-width: 100% !important;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+.s2e-project-steps__step-title br, .s2e-project-steps__step-desc br {
+    display: none !important;
+}
+.oh-hid {
+    overflow: hidden !important;
+}
+
+.wp-block-group.oh-hid {
+    overflow: hidden !important;
+}
+body {
+    overflow-x: hidden;
 }

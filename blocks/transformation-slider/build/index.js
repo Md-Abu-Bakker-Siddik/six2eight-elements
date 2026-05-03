@@ -1,1 +1,620 @@
-(()=>{"use strict";const e=window.wp.blocks,a=JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"six2eight/transformation-slider","version":"1.0.0","title":"Six2eight Transformation Slider","category":"widgets","icon":"slides","description":"Before and after image comparison with optional gallery context.","textdomain":"six2eight-elements","supports":{"align":["wide","full"],"html":false,"spacing":{"margin":true,"padding":true}},"attributes":{"headlinePrefix":{"type":"string","default":"See the"},"headlineAccent":{"type":"string","default":"Transformation"},"subheadline":{"type":"string","default":"See how homeowners across the region are transforming garages, driveways, and outdoor areas into cleaner, safer, more usable spaces."},"showHeader":{"type":"boolean","default":true},"showNav":{"type":"boolean","default":true},"showNavArrows":{"type":"boolean","default":true},"mainIndex":{"type":"number","default":0},"slides":{"type":"array","default":[{"beforeId":0,"beforeUrl":"","afterId":0,"afterUrl":"","beforeLabel":"Before","afterLabel":"After"}]}},"editorScript":"file:./build/index.js"}'),t=window.React,n=window.wp.i18n,r=window.wp.element,s=window.wp.blockEditor,l=window.wp.components;function i({slide:e}){const a=e.beforeUrl,r=e.afterUrl;return(0,t.createElement)("div",{className:"s2e-transformation__compare s2e-compare","data-s2e-compare":"1"},(0,t.createElement)("div",{className:"s2e-compare__inner"},(0,t.createElement)("div",{className:"s2e-compare__layer s2e-compare__before"},a?(0,t.createElement)("img",{src:a,alt:""}):null),(0,t.createElement)("div",{className:"s2e-compare__layer s2e-compare__after",style:{clipPath:"inset(0 0 0 50%)"}},r?(0,t.createElement)("img",{src:r,alt:""}):null),(0,t.createElement)("div",{className:"s2e-compare__handle",role:"presentation",tabIndex:-1},(0,t.createElement)("span",{className:"s2e-compare__handle-knob","aria-hidden":"true"},(0,t.createElement)("span",{className:"s2e-compare__handle-arrows"},"‹›"))),(0,t.createElement)("span",{className:"s2e-transformation__badge s2e-transformation__badge--before"},e.beforeLabel||(0,n.__)("Before","six2eight-elements")),(0,t.createElement)("span",{className:"s2e-transformation__badge s2e-transformation__badge--after"},e.afterLabel||(0,n.__)("After","six2eight-elements"))))}function o({slide:e}){return(0,t.createElement)("div",{className:"s2e-transformation__compare s2e-compare","data-s2e-compare":"1"},(0,t.createElement)("div",{className:"s2e-compare__inner"},(0,t.createElement)("div",{className:"s2e-compare__layer s2e-compare__before"},e.beforeUrl?(0,t.createElement)("img",{src:e.beforeUrl,alt:"",loading:"lazy"}):null),(0,t.createElement)("div",{className:"s2e-compare__layer s2e-compare__after",style:{clipPath:"inset(0 0 0 50%)"}},e.afterUrl?(0,t.createElement)("img",{src:e.afterUrl,alt:"",loading:"lazy"}):null),(0,t.createElement)("div",{className:"s2e-compare__handle",role:"slider","aria-valuemin":0,"aria-valuemax":100,"aria-valuenow":50,tabIndex:0,"aria-label":"Before and after"},(0,t.createElement)("span",{className:"s2e-compare__handle-knob","aria-hidden":"true"},(0,t.createElement)("span",{className:"s2e-compare__handle-arrows"},"‹›"))),(0,t.createElement)("span",{className:"s2e-transformation__badge s2e-transformation__badge--before"},e.beforeLabel||"Before"),(0,t.createElement)("span",{className:"s2e-transformation__badge s2e-transformation__badge--after"},e.afterLabel||"After")))}(0,e.registerBlockType)(a.name,{...a,edit:function({attributes:e,setAttributes:a}){const{headlinePrefix:o,headlineAccent:m,subheadline:c,slides:d,mainIndex:_,showHeader:f=!0,showNav:h=!0,showNavArrows:p=!0}=e,u=!1!==h&&!1!==p,b="s2e-transformation s2e-transformation--editor"+(!1===f?" s2e-transformation--header-off":""),g=(0,r.useRef)(null),v=(0,s.useBlockProps)({ref:g,className:b,"data-s2e-transformation":"1"}),E=d.length||1,N=Math.max(0,Math.min(_,E-1));(0,r.useEffect)(()=>{"undefined"!=typeof window&&window.s2eEightReinitInScope&&g.current&&window.s2eEightReinitInScope(g.current)},[d,_,f,h,p]);const w=(e,t)=>{const n=d.map((a,n)=>n===e?{...a,...t}:a);a({slides:n})};return(0,t.createElement)("section",{...v,"data-s2e-slide-count":String(E),"data-s2e-initial-slide":String(N),"data-s2e-autoplay-ms":"5000"},(0,t.createElement)(s.InspectorControls,null,(0,t.createElement)(l.PanelBody,{title:(0,n.__)("Layout","six2eight-elements"),initialOpen:!0},(0,t.createElement)(l.ToggleControl,{label:(0,n.__)("Show header (headline + sub)","six2eight-elements"),checked:!1!==f,onChange:e=>a({showHeader:e})}),(0,t.createElement)(l.ToggleControl,{label:(0,n.__)("Show navigation bar","six2eight-elements"),help:(0,n.__)("Counter and arrows live in this bar. Turn off to hide the whole bar.","six2eight-elements"),checked:!1!==h,onChange:e=>a({showNav:e})}),(0,t.createElement)(l.ToggleControl,{label:(0,n.__)("Show prev / next arrows","six2eight-elements"),help:(0,n.__)("Slide counter stays visible when arrows are hidden.","six2eight-elements"),checked:!1!==p,onChange:e=>a({showNavArrows:e}),disabled:!1===h})),(0,t.createElement)(l.PanelBody,{title:(0,n.__)("Slides","six2eight-elements"),initialOpen:!0},(0,t.createElement)(l.RangeControl,{label:(0,n.__)("Initial centered slide","six2eight-elements"),min:0,max:Math.max(0,E-1),value:N,onChange:e=>a({mainIndex:e})}),(0,t.createElement)(l.Button,{variant:"primary",onClick:()=>{a({slides:[...d,{beforeId:0,beforeUrl:"",afterId:0,afterUrl:"",beforeLabel:(0,n.__)("Before","six2eight-elements"),afterLabel:(0,n.__)("After","six2eight-elements")}]})}},(0,n.__)("Add comparison","six2eight-elements"))),d.map((e,r)=>(0,t.createElement)(l.PanelBody,{key:r,title:(0,n.__)("Comparison","six2eight-elements")+" "+(r+1),initialOpen:!1},(0,t.createElement)(s.MediaUploadCheck,null,(0,t.createElement)(s.MediaUpload,{onSelect:e=>w(r,{beforeId:e.id,beforeUrl:e.url}),allowedTypes:["image"],value:e.beforeId,render:({open:a})=>(0,t.createElement)(l.Button,{variant:"secondary",onClick:a},e.beforeUrl?(0,n.__)("Replace before","six2eight-elements"):(0,n.__)("Before image","six2eight-elements"))})),(0,t.createElement)(s.MediaUploadCheck,null,(0,t.createElement)(s.MediaUpload,{onSelect:e=>w(r,{afterId:e.id,afterUrl:e.url}),allowedTypes:["image"],value:e.afterId,render:({open:a})=>(0,t.createElement)(l.Button,{variant:"secondary",onClick:a,style:{marginTop:8}},e.afterUrl?(0,n.__)("Replace after","six2eight-elements"):(0,n.__)("After image","six2eight-elements"))})),(0,t.createElement)(l.TextControl,{label:(0,n.__)("Before label","six2eight-elements"),value:e.beforeLabel,onChange:e=>w(r,{beforeLabel:e})}),(0,t.createElement)(l.TextControl,{label:(0,n.__)("After label","six2eight-elements"),value:e.afterLabel,onChange:e=>w(r,{afterLabel:e})}),(0,t.createElement)(l.Button,{isDestructive:!0,variant:"link",onClick:()=>(e=>{if(d.length<2)return;const t=d.filter((a,t)=>t!==e);a({slides:t,mainIndex:Math.min(_,t.length-1)})})(r),disabled:d.length<2},(0,n.__)("Remove comparison","six2eight-elements"))))),(0,t.createElement)("div",{className:"s2e-transformation__inner"},!1!==f?(0,t.createElement)("header",{className:"s2e-transformation__header"},(0,t.createElement)("h2",{className:"s2e-transformation__headline"},(0,t.createElement)(s.RichText,{tagName:"span",className:"s2e-transformation__headline-sans",value:o,onChange:e=>a({headlinePrefix:e}),placeholder:(0,n.__)("See the","six2eight-elements"),allowedFormats:[]}),(0,t.createElement)(s.RichText,{tagName:"span",className:"s2e-transformation__headline-serif",value:m,onChange:e=>a({headlineAccent:e}),placeholder:(0,n.__)("Transformation","six2eight-elements"),allowedFormats:[]})),(0,t.createElement)(s.RichText,{tagName:"p",className:"s2e-transformation__sub",value:c,onChange:e=>a({subheadline:e}),placeholder:(0,n.__)("Supporting copy","six2eight-elements")})):null,(0,t.createElement)("div",{className:"s2e-transformation__track"+(E<=1?" s2e-transformation__track--single":""),"data-s2e-track":!0},(0,t.createElement)("div",{className:"s2e-transformation__rack","data-s2e-transformation-rack":!0},(0,t.createElement)("div",{className:"s2e-transformation__viewport","data-s2e-transformation-viewport":!0},(0,t.createElement)("div",{className:"s2e-transformation__strip","data-s2e-transformation-strip":!0},d.map((e,a)=>(0,t.createElement)("div",{className:"s2e-transformation__cell"+(a===N?" is-active":""),"data-s2e-slide":!0,key:a},(0,t.createElement)(i,{slide:e})))))),!1!==h?(0,t.createElement)("nav",{className:"s2e-transformation__nav","data-s2e-transformation-nav":!0,"aria-label":(0,n.__)("Project slides","six2eight-elements")},u?(0,t.createElement)("button",{type:"button",className:"s2e-transformation__nav-btn s2e-transformation__nav-btn--prev","data-s2e-carousel-prev":!0,"aria-label":(0,n.__)("Previous slide","six2eight-elements")},(0,t.createElement)("span",{"aria-hidden":"true"},"‹")):null,(0,t.createElement)("span",{className:"s2e-transformation__nav-fraction","aria-live":"polite"},(0,t.createElement)("span",{"data-s2e-current":!0},"1")," / ",(0,t.createElement)("span",{"data-s2e-total":!0},E)),u?(0,t.createElement)("button",{type:"button",className:"s2e-transformation__nav-btn s2e-transformation__nav-btn--next","data-s2e-carousel-next":!0,"aria-label":(0,n.__)("Next slide","six2eight-elements")},(0,t.createElement)("span",{"aria-hidden":"true"},"›")):null):null)))},save:function({attributes:e}){const{headlinePrefix:a,headlineAccent:n,subheadline:r,slides:l,mainIndex:i,showHeader:m=!0,showNav:c=!0,showNavArrows:d=!0}=e,_=!1!==c&&!1!==d,f="s2e-transformation"+(!1===m?" s2e-transformation--header-off":""),h=l.length||1,p=Math.max(0,Math.min(i||0,h-1)),u=s.useBlockProps.save({className:f,"data-s2e-transformation":"1","data-s2e-slide-count":String(h),"data-s2e-initial-slide":String(p),"data-s2e-autoplay-ms":"5000"});return(0,t.createElement)("section",{...u},(0,t.createElement)("div",{className:"s2e-transformation__inner"},!1!==m?(0,t.createElement)("header",{className:"s2e-transformation__header"},(0,t.createElement)("h2",{className:"s2e-transformation__headline"},(0,t.createElement)(s.RichText.Content,{tagName:"span",className:"s2e-transformation__headline-sans",value:a}),(0,t.createElement)(s.RichText.Content,{tagName:"span",className:"s2e-transformation__headline-serif",value:n})),(0,t.createElement)(s.RichText.Content,{tagName:"p",className:"s2e-transformation__sub",value:r})):null,(0,t.createElement)("div",{className:"s2e-transformation__track"+(h<=1?" s2e-transformation__track--single":""),"data-s2e-track":!0},(0,t.createElement)("div",{className:"s2e-transformation__rack","data-s2e-transformation-rack":!0},(0,t.createElement)("div",{className:"s2e-transformation__viewport","data-s2e-transformation-viewport":!0},(0,t.createElement)("div",{className:"s2e-transformation__strip","data-s2e-transformation-strip":!0},l.map((e,a)=>(0,t.createElement)("div",{className:"s2e-transformation__cell"+(a===p?" is-active":""),"data-s2e-slide":!0,key:a},(0,t.createElement)(o,{slide:e})))))),!1!==c?(0,t.createElement)("nav",{className:"s2e-transformation__nav","data-s2e-transformation-nav":!0,"aria-label":"Project slides"},_?(0,t.createElement)("button",{type:"button",className:"s2e-transformation__nav-btn s2e-transformation__nav-btn--prev","data-s2e-carousel-prev":!0,"aria-label":"Previous slide"},(0,t.createElement)("span",{"aria-hidden":"true"},"‹")):null,(0,t.createElement)("span",{className:"s2e-transformation__nav-fraction","aria-live":"polite"},(0,t.createElement)("span",{"data-s2e-current":!0},"1")," / ",(0,t.createElement)("span",{"data-s2e-total":!0},h)),_?(0,t.createElement)("button",{type:"button",className:"s2e-transformation__nav-btn s2e-transformation__nav-btn--next","data-s2e-carousel-next":!0,"aria-label":"Next slide"},(0,t.createElement)("span",{"aria-hidden":"true"},"›")):null):null)))}})})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/edit.js"
+/*!*********************!*\
+  !*** ./src/edit.js ***!
+  \*********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Edit)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+function ComparePreview({
+  slide
+}) {
+  const before = slide.beforeUrl;
+  const after = slide.afterUrl;
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__compare s2e-compare",
+    "data-s2e-compare": "1"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-compare__inner"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-compare__layer s2e-compare__before"
+  }, before ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: before,
+    alt: ""
+  }) : null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-compare__layer s2e-compare__after",
+    style: {
+      clipPath: 'inset(0 0 0 50%)'
+    }
+  }, after ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: after,
+    alt: ""
+  }) : null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-compare__handle",
+    role: "presentation",
+    tabIndex: -1
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-compare__handle-knob",
+    "aria-hidden": "true"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-compare__handle-arrows"
+  }, '\u2039\u203A'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-transformation__badge s2e-transformation__badge--before"
+  }, slide.beforeLabel || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before', 'six2eight-elements')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-transformation__badge s2e-transformation__badge--after"
+  }, slide.afterLabel || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After', 'six2eight-elements'))));
+}
+function Edit({
+  attributes,
+  setAttributes
+}) {
+  const {
+    headlinePrefix,
+    headlineAccent,
+    subheadline,
+    slides,
+    mainIndex,
+    showHeader = true,
+    showNav = true,
+    showNavArrows = true
+  } = attributes;
+  const showArrowsInNav = showNav !== false && showNavArrows !== false;
+  const sectionClass = 's2e-transformation s2e-transformation--editor' + (showHeader === false ? ' s2e-transformation--header-off' : '');
+  const ref = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)({
+    ref,
+    className: sectionClass,
+    'data-s2e-transformation': '1'
+  });
+  const count = slides.length || 1;
+  const idx = Math.max(0, Math.min(mainIndex, count - 1));
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (typeof window !== 'undefined' && window.s2eEightReinitInScope && ref.current) {
+      window.s2eEightReinitInScope(ref.current);
+    }
+  }, [slides, mainIndex, showHeader, showNav, showNavArrows]);
+  const updateSlide = (index, patch) => {
+    const nextSlides = slides.map((row, i) => i === index ? {
+      ...row,
+      ...patch
+    } : row);
+    setAttributes({
+      slides: nextSlides
+    });
+  };
+  const addSlide = () => {
+    setAttributes({
+      slides: [...slides, {
+        beforeId: 0,
+        beforeUrl: '',
+        afterId: 0,
+        afterUrl: '',
+        beforeLabel: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before', 'six2eight-elements'),
+        afterLabel: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After', 'six2eight-elements')
+      }]
+    });
+  };
+  const removeSlide = index => {
+    if (slides.length < 2) {
+      return;
+    }
+    const nextSlides = slides.filter((_, i) => i !== index);
+    setAttributes({
+      slides: nextSlides,
+      mainIndex: Math.min(mainIndex, nextSlides.length - 1)
+    });
+  };
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("section", {
+    ...blockProps,
+    "data-s2e-slide-count": String(count),
+    "data-s2e-initial-slide": String(idx),
+    "data-s2e-autoplay-ms": "5000"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Layout', 'six2eight-elements'),
+    initialOpen: true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Show header (headline + sub)', 'six2eight-elements'),
+    checked: showHeader !== false,
+    onChange: v => setAttributes({
+      showHeader: v
+    })
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Show navigation bar', 'six2eight-elements'),
+    help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Counter and arrows live in this bar. Turn off to hide the whole bar.', 'six2eight-elements'),
+    checked: showNav !== false,
+    onChange: v => setAttributes({
+      showNav: v
+    })
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Show prev / next arrows', 'six2eight-elements'),
+    help: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Slide counter stays visible when arrows are hidden.', 'six2eight-elements'),
+    checked: showNavArrows !== false,
+    onChange: v => setAttributes({
+      showNavArrows: v
+    }),
+    disabled: showNav === false
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Slides', 'six2eight-elements'),
+    initialOpen: true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.RangeControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Initial centered slide', 'six2eight-elements'),
+    min: 0,
+    max: Math.max(0, count - 1),
+    value: idx,
+    onChange: v => setAttributes({
+      mainIndex: v
+    })
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+    variant: "primary",
+    onClick: addSlide
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add comparison', 'six2eight-elements'))), slides.map((slide, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
+    key: index,
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Comparison', 'six2eight-elements') + ' ' + (index + 1),
+    initialOpen: false
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
+    onSelect: media => updateSlide(index, {
+      beforeId: media.id,
+      beforeUrl: media.url
+    }),
+    allowedTypes: ['image'],
+    value: slide.beforeId,
+    render: ({
+      open
+    }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+      variant: "secondary",
+      onClick: open
+    }, slide.beforeUrl ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Replace before', 'six2eight-elements') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before image', 'six2eight-elements'))
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
+    onSelect: media => updateSlide(index, {
+      afterId: media.id,
+      afterUrl: media.url
+    }),
+    allowedTypes: ['image'],
+    value: slide.afterId,
+    render: ({
+      open
+    }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+      variant: "secondary",
+      onClick: open,
+      style: {
+        marginTop: 8
+      }
+    }, slide.afterUrl ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Replace after', 'six2eight-elements') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After image', 'six2eight-elements'))
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before label', 'six2eight-elements'),
+    value: slide.beforeLabel,
+    onChange: v => updateSlide(index, {
+      beforeLabel: v
+    })
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After label', 'six2eight-elements'),
+    value: slide.afterLabel,
+    onChange: v => updateSlide(index, {
+      afterLabel: v
+    })
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+    isDestructive: true,
+    variant: "link",
+    onClick: () => removeSlide(index),
+    disabled: slides.length < 2
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Remove comparison', 'six2eight-elements'))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__inner"
+  }, showHeader !== false ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("header", {
+    className: "s2e-transformation__header"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "s2e-transformation__headline"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    tagName: "span",
+    className: "s2e-transformation__headline-sans",
+    value: headlinePrefix,
+    onChange: v => setAttributes({
+      headlinePrefix: v
+    }),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('See the', 'six2eight-elements'),
+    allowedFormats: []
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    tagName: "span",
+    className: "s2e-transformation__headline-serif",
+    value: headlineAccent,
+    onChange: v => setAttributes({
+      headlineAccent: v
+    }),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Transformation', 'six2eight-elements'),
+    allowedFormats: []
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.RichText, {
+    tagName: "p",
+    className: "s2e-transformation__sub",
+    value: subheadline,
+    onChange: v => setAttributes({
+      subheadline: v
+    }),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Supporting copy', 'six2eight-elements')
+  })) : null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 's2e-transformation__track' + (count <= 1 ? ' s2e-transformation__track--single' : ''),
+    "data-s2e-track": true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__rack",
+    "data-s2e-transformation-rack": true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__viewport",
+    "data-s2e-transformation-viewport": true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__strip",
+    "data-s2e-transformation-strip": true
+  }, slides.map((slide, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 's2e-transformation__cell' + (i === idx ? ' is-active' : ''),
+    "data-s2e-slide": true,
+    key: i
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(ComparePreview, {
+    slide: slide
+  })))))), showNav !== false ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("nav", {
+    className: "s2e-transformation__nav",
+    "data-s2e-transformation-nav": true,
+    "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Project slides', 'six2eight-elements')
+  }, showArrowsInNav ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    className: "s2e-transformation__nav-btn s2e-transformation__nav-btn--prev",
+    "data-s2e-carousel-prev": true,
+    "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Previous slide', 'six2eight-elements')
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    "aria-hidden": "true"
+  }, "\u2039")) : null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-transformation__nav-fraction",
+    "aria-live": "polite"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    "data-s2e-current": true
+  }, "1"), " / ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    "data-s2e-total": true
+  }, count)), showArrowsInNav ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    className: "s2e-transformation__nav-btn s2e-transformation__nav-btn--next",
+    "data-s2e-carousel-next": true,
+    "aria-label": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Next slide', 'six2eight-elements')
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    "aria-hidden": "true"
+  }, "\u203A")) : null) : null)));
+}
+
+/***/ },
+
+/***/ "./src/save.js"
+/*!*********************!*\
+  !*** ./src/save.js ***!
+  \*********************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ save)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function CompareSave({
+  slide
+}) {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__compare s2e-compare",
+    "data-s2e-compare": "1"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-compare__inner"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-compare__layer s2e-compare__before"
+  }, slide.beforeUrl ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: slide.beforeUrl,
+    alt: "",
+    loading: "lazy"
+  }) : null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-compare__layer s2e-compare__after",
+    style: {
+      clipPath: 'inset(0 0 0 50%)'
+    }
+  }, slide.afterUrl ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: slide.afterUrl,
+    alt: "",
+    loading: "lazy"
+  }) : null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-compare__handle",
+    role: "slider",
+    "aria-valuemin": 0,
+    "aria-valuemax": 100,
+    "aria-valuenow": 50,
+    tabIndex: 0,
+    "aria-label": "Before and after"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-compare__handle-knob",
+    "aria-hidden": "true"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-compare__handle-arrows"
+  }, '\u2039\u203A'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-transformation__badge s2e-transformation__badge--before"
+  }, slide.beforeLabel || 'Before'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-transformation__badge s2e-transformation__badge--after"
+  }, slide.afterLabel || 'After')));
+}
+function save({
+  attributes
+}) {
+  const {
+    headlinePrefix,
+    headlineAccent,
+    subheadline,
+    slides,
+    mainIndex,
+    showHeader = true,
+    showNav = true,
+    showNavArrows = true
+  } = attributes;
+  const showArrowsInNav = showNav !== false && showNavArrows !== false;
+  const sectionClass = 's2e-transformation' + (showHeader === false ? ' s2e-transformation--header-off' : '');
+  const count = slides.length || 1;
+  const idx = Math.max(0, Math.min(mainIndex || 0, count - 1));
+  const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
+    className: sectionClass,
+    'data-s2e-transformation': '1',
+    'data-s2e-slide-count': String(count),
+    'data-s2e-initial-slide': String(idx),
+    'data-s2e-autoplay-ms': '5000'
+  });
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("section", {
+    ...blockProps
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__inner"
+  }, showHeader !== false ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("header", {
+    className: "s2e-transformation__header"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "s2e-transformation__headline"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+    tagName: "span",
+    className: "s2e-transformation__headline-sans",
+    value: headlinePrefix
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+    tagName: "span",
+    className: "s2e-transformation__headline-serif",
+    value: headlineAccent
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.RichText.Content, {
+    tagName: "p",
+    className: "s2e-transformation__sub",
+    value: subheadline
+  })) : null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 's2e-transformation__track' + (count <= 1 ? ' s2e-transformation__track--single' : ''),
+    "data-s2e-track": true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__rack",
+    "data-s2e-transformation-rack": true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__viewport",
+    "data-s2e-transformation-viewport": true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "s2e-transformation__strip",
+    "data-s2e-transformation-strip": true
+  }, slides.map((slide, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: 's2e-transformation__cell' + (i === idx ? ' is-active' : ''),
+    "data-s2e-slide": true,
+    key: i
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(CompareSave, {
+    slide: slide
+  })))))), showNav !== false ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("nav", {
+    className: "s2e-transformation__nav",
+    "data-s2e-transformation-nav": true,
+    "aria-label": "Project slides"
+  }, showArrowsInNav ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    className: "s2e-transformation__nav-btn s2e-transformation__nav-btn--prev",
+    "data-s2e-carousel-prev": true,
+    "aria-label": "Previous slide"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    "aria-hidden": "true"
+  }, "\u2039")) : null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "s2e-transformation__nav-fraction",
+    "aria-live": "polite"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    "data-s2e-current": true
+  }, "1"), " / ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    "data-s2e-total": true
+  }, count)), showArrowsInNav ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    type: "button",
+    className: "s2e-transformation__nav-btn s2e-transformation__nav-btn--next",
+    "data-s2e-carousel-next": true,
+    "aria-label": "Next slide"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    "aria-hidden": "true"
+  }, "\u203A")) : null) : null)));
+}
+
+/***/ },
+
+/***/ "react"
+/*!************************!*\
+  !*** external "React" ***!
+  \************************/
+(module) {
+
+module.exports = window["React"];
+
+/***/ },
+
+/***/ "@wordpress/block-editor"
+/*!*************************************!*\
+  !*** external ["wp","blockEditor"] ***!
+  \*************************************/
+(module) {
+
+module.exports = window["wp"]["blockEditor"];
+
+/***/ },
+
+/***/ "@wordpress/blocks"
+/*!********************************!*\
+  !*** external ["wp","blocks"] ***!
+  \********************************/
+(module) {
+
+module.exports = window["wp"]["blocks"];
+
+/***/ },
+
+/***/ "@wordpress/components"
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+(module) {
+
+module.exports = window["wp"]["components"];
+
+/***/ },
+
+/***/ "@wordpress/element"
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+(module) {
+
+module.exports = window["wp"]["element"];
+
+/***/ },
+
+/***/ "@wordpress/i18n"
+/*!******************************!*\
+  !*** external ["wp","i18n"] ***!
+  \******************************/
+(module) {
+
+module.exports = window["wp"]["i18n"];
+
+/***/ },
+
+/***/ "./block.json"
+/*!********************!*\
+  !*** ./block.json ***!
+  \********************/
+(module) {
+
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"six2eight/transformation-slider","version":"1.0.0","title":"Six2eight Transformation Slider","category":"widgets","icon":"slides","description":"Before and after image comparison with optional gallery context.","textdomain":"six2eight-elements","supports":{"align":["wide","full"],"html":false,"spacing":{"margin":true,"padding":true}},"attributes":{"headlinePrefix":{"type":"string","default":"See the"},"headlineAccent":{"type":"string","default":"Transformation"},"subheadline":{"type":"string","default":"See how homeowners across the region are transforming garages, driveways, and outdoor areas into cleaner, safer, more usable spaces."},"showHeader":{"type":"boolean","default":true},"showNav":{"type":"boolean","default":true},"showNavArrows":{"type":"boolean","default":true},"mainIndex":{"type":"number","default":0},"slides":{"type":"array","default":[{"beforeId":0,"beforeUrl":"","afterId":0,"afterUrl":"","beforeLabel":"Before","afterLabel":"After"}]}},"editorScript":"file:./build/index.js"}');
+
+/***/ }
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../block.json */ "./block.json");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./src/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./src/save.js");
+
+
+
+
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)(_block_json__WEBPACK_IMPORTED_MODULE_1__.name, {
+  ..._block_json__WEBPACK_IMPORTED_MODULE_1__,
+  edit: _edit__WEBPACK_IMPORTED_MODULE_2__["default"],
+  save: _save__WEBPACK_IMPORTED_MODULE_3__["default"]
+});
+})();
+
+/******/ })()
+;
+//# sourceMappingURL=index.js.map
