@@ -68,31 +68,16 @@ class S2E_Elements_Assets {
 		);
 
 		wp_register_style(
-			'swiper-bundle',
-			'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css',
-			array(),
-			'11.2.6'
-		);
-
-		wp_register_script(
-			'swiper-bundle',
-			'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
-			array(),
-			'11.2.6',
-			true
-		);
-
-		wp_register_style(
 			self::STYLE_HANDLE,
 			S2E_ELEMENTS_URL . 'assets/css/style.css',
-			array( 'six2eight-elements-fonts', 'swiper-bundle' ),
+			array( 'six2eight-elements-fonts' ),
 			S2E_ELEMENTS_VERSION
 		);
 
 		wp_register_script(
 			self::SCRIPT_HANDLE,
-			S2E_ELEMENTS_URL . 'assets/js/main.js',
-			array( 'swiper-bundle' ),
+			S2E_ELEMENTS_URL . 'assets/js/script.js',
+			array(),
 			S2E_ELEMENTS_VERSION,
 			true
 		);

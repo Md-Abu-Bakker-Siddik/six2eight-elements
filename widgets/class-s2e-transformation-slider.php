@@ -233,6 +233,35 @@ class S2E_Transformation_Slider extends Widget_Base {
 			)
 		);
 
+		$this->add_control(
+			'carousel_show_nav',
+			array(
+				'label'       => esc_html__( 'Navigation bar', 'six2eight-elements' ),
+				'description' => esc_html__( 'Show the row below the slider (counter and optional arrows). Turn off to hide the entire bar.', 'six2eight-elements' ),
+				'type'        => Controls_Manager::SWITCHER,
+				'label_on'    => esc_html__( 'Show', 'six2eight-elements' ),
+				'label_off'   => esc_html__( 'Hide', 'six2eight-elements' ),
+				'return_value' => 'yes',
+				'default'     => 'yes',
+			)
+		);
+
+		$this->add_control(
+			'carousel_show_arrows',
+			array(
+				'label'        => esc_html__( 'Prev / Next arrows', 'six2eight-elements' ),
+				'description'  => esc_html__( 'Show arrow buttons inside the navigation bar (counter stays if arrows are off).', 'six2eight-elements' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'label_on'     => esc_html__( 'Show', 'six2eight-elements' ),
+				'label_off'    => esc_html__( 'Hide', 'six2eight-elements' ),
+				'return_value' => 'yes',
+				'default'      => 'yes',
+				'condition'    => array(
+					'carousel_show_nav' => 'yes',
+				),
+			)
+		);
+
 		$this->end_controls_section();
 	}
 
@@ -386,7 +415,7 @@ class S2E_Transformation_Slider extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'default'   => '#1b3d54',
 				'selectors' => array(
-					'{{WRAPPER}} .swiper-slide-active .s2e-transformation__compare' => 'border-color: {{VALUE}};',
+					'{{WRAPPER}} .s2e-transformation__cell.is-active .s2e-transformation__compare' => 'border-color: {{VALUE}};',
 					'{{WRAPPER}} .s2e-transformation' => '--s2e-brand-navy: {{VALUE}};',
 				),
 			)
@@ -409,7 +438,7 @@ class S2E_Transformation_Slider extends Widget_Base {
 					'unit' => 'px',
 				),
 				'selectors'  => array(
-					'{{WRAPPER}} .swiper-slide-active .s2e-transformation__compare' => 'border-width: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .s2e-transformation__cell.is-active .s2e-transformation__compare' => 'border-width: {{SIZE}}{{UNIT}};',
 					'{{WRAPPER}} .s2e-transformation' => '--s2e-transformation-frame: {{SIZE}}{{UNIT}};',
 				),
 			)
@@ -422,11 +451,11 @@ class S2E_Transformation_Slider extends Widget_Base {
 				'type'       => Controls_Manager::SLIDER,
 				'size_units' => array( 'px' ),
 				'default'    => array(
-					'size' => 26,
+					'size' => 20,
 					'unit' => 'px',
 				),
 				'selectors'  => array(
-					'{{WRAPPER}} .swiper-slide-active .s2e-transformation__compare' => 'border-radius: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .s2e-transformation__cell.is-active .s2e-transformation__compare' => 'border-radius: {{SIZE}}{{UNIT}};',
 					'{{WRAPPER}} .s2e-transformation' => '--s2e-transformation-radius: {{SIZE}}{{UNIT}};',
 				),
 			)
@@ -469,15 +498,15 @@ class S2E_Transformation_Slider extends Widget_Base {
 			'thumb_gap',
 			array(
 				'label'       => esc_html__( 'Slide gap (space between)', 'six2eight-elements' ),
-				'description' => esc_html__( 'Matches Swiper spaceBetween (gap between slides).', 'six2eight-elements' ),
+				'description' => esc_html__( 'Gap between slides in the carousel rack.', 'six2eight-elements' ),
 				'type'        => Controls_Manager::SLIDER,
 				'size_units'  => array( 'px' ),
 				'default'     => array(
-					'size' => 16,
+					'size' => 0,
 					'unit' => 'px',
 				),
 				'selectors'   => array(
-					'{{WRAPPER}} .s2e-transformation__swiper' => '--s2e-transformation-rack-gap: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .s2e-transformation' => '--s2e-transformation-rack-gap: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
@@ -491,7 +520,7 @@ class S2E_Transformation_Slider extends Widget_Base {
 				'min'         => 50,
 				'max'         => 100,
 				'step'        => 1,
-				'default'     => 78,
+				'default'     => 85,
 				'selectors'   => array(
 					'{{WRAPPER}} .s2e-transformation' => '--s2e-transformation-side-scale: calc({{VALUE}} / 100);',
 				),
@@ -502,7 +531,7 @@ class S2E_Transformation_Slider extends Widget_Base {
 	}
 
 	/**
-	 * Render one comparison cell (one Swiper slide).
+	 * Render one comparison cell (one carousel slide).
 	 *
 	 * @param array $item     Repeater item.
 	 * @param array $settings Widget settings.
@@ -581,6 +610,9 @@ class S2E_Transformation_Slider extends Widget_Base {
 			}
 		}
 
+		$show_carousel_nav    = ! isset( $settings['carousel_show_nav'] ) || 'yes' === $settings['carousel_show_nav'];
+		$show_carousel_arrows = $show_carousel_nav && ( ! isset( $settings['carousel_show_arrows'] ) || 'yes' === $settings['carousel_show_arrows'] );
+
 		$section_class = 's2e-transformation';
 		if ( ! $show_header ) {
 			$section_class .= ' s2e-transformation--header-off';
@@ -608,28 +640,39 @@ class S2E_Transformation_Slider extends Widget_Base {
 					</header>
 				<?php endif; ?>
 				<div class="<?php echo esc_attr( $track_class ); ?>" data-s2e-track>
-					<div class="swiper s2e-transformation__swiper" data-s2e-transformation-swiper>
-						<div class="swiper-wrapper">
-							<?php
-							foreach ( $slides as $slide_item ) {
-								echo '<div class="swiper-slide">';
-								$this->render_compare_cell( $slide_item, $settings );
-								echo '</div>';
-							}
-							?>
+					<div class="s2e-transformation__rack" data-s2e-transformation-rack>
+						<div class="s2e-transformation__viewport" data-s2e-transformation-viewport>
+							<div class="s2e-transformation__strip" data-s2e-transformation-strip>
+								<?php
+								$slide_i = 0;
+								foreach ( $slides as $slide_item ) {
+									$cell_class = 's2e-transformation__cell' . ( 0 === $slide_i ? ' is-active' : '' );
+									echo '<div class="' . esc_attr( $cell_class ) . '" data-s2e-slide>';
+									$this->render_compare_cell( $slide_item, $settings );
+									echo '</div>';
+									++$slide_i;
+								}
+								?>
+							</div>
 						</div>
 					</div>
-					<nav class="s2e-transformation__nav" data-s2e-transformation-nav aria-label="<?php echo esc_attr__( 'Project slides', 'six2eight-elements' ); ?>">
-						<button type="button" class="s2e-transformation__nav-btn s2e-transformation__nav-btn--prev" data-s2e-swiper-prev aria-label="<?php echo esc_attr__( 'Previous slide', 'six2eight-elements' ); ?>">
-							<span aria-hidden="true">&#8249;</span>
-						</button>
-						<span class="s2e-transformation__nav-fraction" aria-live="polite">
-							<span data-s2e-current>1</span> / <span data-s2e-total><?php echo (int) $count; ?></span>
-						</span>
-						<button type="button" class="s2e-transformation__nav-btn s2e-transformation__nav-btn--next" data-s2e-swiper-next aria-label="<?php echo esc_attr__( 'Next slide', 'six2eight-elements' ); ?>">
-							<span aria-hidden="true">&#8250;</span>
-						</button>
-					</nav>
+					<?php if ( $show_carousel_nav ) : ?>
+						<nav class="s2e-transformation__nav" data-s2e-transformation-nav aria-label="<?php echo esc_attr__( 'Project slides', 'six2eight-elements' ); ?>">
+							<?php if ( $show_carousel_arrows ) : ?>
+								<button type="button" class="s2e-transformation__nav-btn s2e-transformation__nav-btn--prev" data-s2e-carousel-prev aria-label="<?php echo esc_attr__( 'Previous slide', 'six2eight-elements' ); ?>">
+									<span aria-hidden="true">&#8249;</span>
+								</button>
+							<?php endif; ?>
+							<span class="s2e-transformation__nav-fraction" aria-live="polite">
+								<span data-s2e-current>1</span> / <span data-s2e-total><?php echo (int) $count; ?></span>
+							</span>
+							<?php if ( $show_carousel_arrows ) : ?>
+								<button type="button" class="s2e-transformation__nav-btn s2e-transformation__nav-btn--next" data-s2e-carousel-next aria-label="<?php echo esc_attr__( 'Next slide', 'six2eight-elements' ); ?>">
+									<span aria-hidden="true">&#8250;</span>
+								</button>
+							<?php endif; ?>
+						</nav>
+					<?php endif; ?>
 				</div>
 			</div>
 		</section>

@@ -36,6 +36,14 @@
 			"type": "boolean",
 			"default": true
 		},
+		"showNav": {
+			"type": "boolean",
+			"default": true
+		},
+		"showNavArrows": {
+			"type": "boolean",
+			"default": true
+		},
 		"mainIndex": {
 			"type": "number",
 			"default": 0

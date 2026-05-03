@@ -55,7 +55,11 @@ export default function Edit({ attributes, setAttributes }) {
 		slides,
 		mainIndex,
 		showHeader = true,
+		showNav = true,
+		showNavArrows = true,
 	} = attributes;
+
+	const showArrowsInNav = showNav !== false && showNavArrows !== false;
 
 	const sectionClass =
 		's2e-transformation s2e-transformation--editor' +
@@ -75,7 +79,7 @@ export default function Edit({ attributes, setAttributes }) {
 		if (typeof window !== 'undefined' && window.s2eEightReinitInScope && ref.current) {
 			window.s2eEightReinitInScope(ref.current);
 		}
-	}, [slides, mainIndex, showHeader]);
+	}, [slides, mainIndex, showHeader, showNav, showNavArrows]);
 
 	const updateSlide = (index, patch) => {
 		const nextSlides = slides.map((row, i) =>
@@ -124,6 +128,25 @@ export default function Edit({ attributes, setAttributes }) {
 						label={__('Show header (headline + sub)', 'six2eight-elements')}
 						checked={showHeader !== false}
 						onChange={(v) => setAttributes({ showHeader: v })}
+					/>
+					<ToggleControl
+						label={__('Show navigation bar', 'six2eight-elements')}
+						help={__(
+							'Counter and arrows live in this bar. Turn off to hide the whole bar.',
+							'six2eight-elements'
+						)}
+						checked={showNav !== false}
+						onChange={(v) => setAttributes({ showNav: v })}
+					/>
+					<ToggleControl
+						label={__('Show prev / next arrows', 'six2eight-elements')}
+						help={__(
+							'Slide counter stays visible when arrows are hidden.',
+							'six2eight-elements'
+						)}
+						checked={showNavArrows !== false}
+						onChange={(v) => setAttributes({ showNavArrows: v })}
+						disabled={showNav === false}
 					/>
 				</PanelBody>
 				<PanelBody title={__('Slides', 'six2eight-elements')} initialOpen>
@@ -242,40 +265,54 @@ export default function Edit({ attributes, setAttributes }) {
 					}
 					data-s2e-track
 				>
-					<div className="swiper s2e-transformation__swiper" data-s2e-transformation-swiper>
-						<div className="swiper-wrapper">
-							{slides.map((slide, i) => (
-								<div className="swiper-slide" key={i}>
-									<ComparePreview slide={slide} />
-								</div>
-							))}
+					<div className="s2e-transformation__rack" data-s2e-transformation-rack>
+						<div className="s2e-transformation__viewport" data-s2e-transformation-viewport>
+							<div className="s2e-transformation__strip" data-s2e-transformation-strip>
+								{slides.map((slide, i) => (
+									<div
+										className={
+											's2e-transformation__cell' + (i === idx ? ' is-active' : '')
+										}
+										data-s2e-slide
+										key={i}
+									>
+										<ComparePreview slide={slide} />
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
-					<nav
-						className="s2e-transformation__nav"
-						data-s2e-transformation-nav
-						aria-label={__('Project slides', 'six2eight-elements')}
-					>
-						<button
-							type="button"
-							className="s2e-transformation__nav-btn s2e-transformation__nav-btn--prev"
-							data-s2e-swiper-prev
-							aria-label={__('Previous slide', 'six2eight-elements')}
+					{showNav !== false ? (
+						<nav
+							className="s2e-transformation__nav"
+							data-s2e-transformation-nav
+							aria-label={__('Project slides', 'six2eight-elements')}
 						>
-							<span aria-hidden="true">&#8249;</span>
-						</button>
-						<span className="s2e-transformation__nav-fraction" aria-live="polite">
-							<span data-s2e-current>1</span> / <span data-s2e-total>{count}</span>
-						</span>
-						<button
-							type="button"
-							className="s2e-transformation__nav-btn s2e-transformation__nav-btn--next"
-							data-s2e-swiper-next
-							aria-label={__('Next slide', 'six2eight-elements')}
-						>
-							<span aria-hidden="true">&#8250;</span>
-						</button>
-					</nav>
+							{showArrowsInNav ? (
+								<button
+									type="button"
+									className="s2e-transformation__nav-btn s2e-transformation__nav-btn--prev"
+									data-s2e-carousel-prev
+									aria-label={__('Previous slide', 'six2eight-elements')}
+								>
+									<span aria-hidden="true">&#8249;</span>
+								</button>
+							) : null}
+							<span className="s2e-transformation__nav-fraction" aria-live="polite">
+								<span data-s2e-current>1</span> / <span data-s2e-total>{count}</span>
+							</span>
+							{showArrowsInNav ? (
+								<button
+									type="button"
+									className="s2e-transformation__nav-btn s2e-transformation__nav-btn--next"
+									data-s2e-carousel-next
+									aria-label={__('Next slide', 'six2eight-elements')}
+								>
+									<span aria-hidden="true">&#8250;</span>
+								</button>
+							) : null}
+						</nav>
+					) : null}
 				</div>
 			</div>
 		</section>
