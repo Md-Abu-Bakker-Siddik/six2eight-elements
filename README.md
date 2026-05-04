@@ -84,7 +84,7 @@ For Elementor on very narrow screens, use **section full width** and **column 10
 
 ### Block JavaScript
 
-Source lives under each block’s `src/` folder. After changing `edit.js`, `save.js`, or `index.js`:
+Source lives under each block’s `src/` folder. After changing **any** of `edit.js`, `save.js`, `index.js`, or **`utils.js`** (shared helpers), rebuild that block:
 
 ```bash
 cd blocks/project-steps
@@ -99,6 +99,14 @@ npm run build
 ```
 
 Committed sites should include the generated `build/` output (or run the build in CI before deploy).
+
+#### Block shows “unexpected or invalid content”
+
+That notice appears when **stored block HTML** no longer exactly matches what the current `save()` would output (for example after a plugin update that changes markup or RichText handling). In the editor, use **Attempt block recovery**, then **Save** the post. If recovery fails, remove the block and insert it again. Existing content in the database is not auto-rewritten until you save.
+
+#### Editor white screen / `rich-text` TypeError
+
+Always deploy the matching `blocks/*/build/` files after `npm run build`. If the editor still loads an old script, hard-refresh the browser or clear any caching/minify plugin. Project Steps coerces missing or non-string RichText attributes before `save()` runs so corrupted attributes from older saves do not crash the block editor.
 
 Block builds use `webpack.config.js` with **no source maps** so client zips stay smaller; editor behavior is unchanged.
 
