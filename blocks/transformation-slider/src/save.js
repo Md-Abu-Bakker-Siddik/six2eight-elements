@@ -1,5 +1,18 @@
 import { useBlockProps, RichText } from '@wordpress/block-editor';
 
+const DEFAULT_SLIDE = {
+	beforeId: 0,
+	beforeUrl: '',
+	afterId: 0,
+	afterUrl: '',
+	beforeLabel: 'Before',
+	afterLabel: 'After',
+};
+
+function asRichString(value) {
+	return typeof value === 'string' ? value : '';
+}
+
 function CompareSave({ slide }) {
 	return (
 		<div className="s2e-transformation__compare s2e-compare" data-s2e-compare="1">
@@ -43,15 +56,20 @@ function CompareSave({ slide }) {
 
 export default function save({ attributes }) {
 	const {
-		headlinePrefix,
-		headlineAccent,
-		subheadline,
-		slides,
 		mainIndex,
 		showHeader = true,
 		showNav = true,
 		showNavArrows = true,
 	} = attributes;
+
+	const headlinePrefix = asRichString(attributes.headlinePrefix);
+	const headlineAccent = asRichString(attributes.headlineAccent);
+	const subheadline = asRichString(attributes.subheadline);
+
+	let slides = Array.isArray(attributes.slides) ? attributes.slides : [];
+	if (!slides.length) {
+		slides = [{ ...DEFAULT_SLIDE }];
+	}
 
 	const showArrowsInNav = showNav !== false && showNavArrows !== false;
 
@@ -59,7 +77,7 @@ export default function save({ attributes }) {
 		's2e-transformation' + (showHeader === false ? ' s2e-transformation--header-off' : '');
 
 	const count = slides.length || 1;
-	const idx = Math.max(0, Math.min(mainIndex || 0, count - 1));
+	const idx = Math.max(0, Math.min(Number(mainIndex) || 0, count - 1));
 
 	const blockProps = useBlockProps.save({
 		className: sectionClass,

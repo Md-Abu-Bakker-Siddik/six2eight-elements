@@ -1,0 +1,16 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# npm — not needed on the server (blocks still run from build/)
+**/node_modules
+
+# Block source & package metadata (optional for a runtime-only zip)
+**/blocks/**/src
+**/blocks/**/package.json
+**/blocks/**/package-lock.json
+**/blocks/**/webpack.config.js
+
+# Source maps
+**/*.map

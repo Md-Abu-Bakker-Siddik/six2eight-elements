@@ -30,8 +30,9 @@ __webpack_require__.r(__webpack_exports__);
 function ComparePreview({
   slide
 }) {
-  const before = slide.beforeUrl;
-  const after = slide.afterUrl;
+  const safe = slide && typeof slide === 'object' ? slide : {};
+  const before = safe.beforeUrl;
+  const after = safe.afterUrl;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "s2e-transformation__compare s2e-compare",
     "data-s2e-compare": "1"
@@ -61,24 +62,27 @@ function ComparePreview({
     className: "s2e-compare__handle-arrows"
   }, '\u2039\u203A'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "s2e-transformation__badge s2e-transformation__badge--before"
-  }, slide.beforeLabel || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before', 'six2eight-elements')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }, safe.beforeLabel || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before', 'six2eight-elements')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "s2e-transformation__badge s2e-transformation__badge--after"
-  }, slide.afterLabel || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After', 'six2eight-elements'))));
+  }, safe.afterLabel || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After', 'six2eight-elements'))));
+}
+function asRichString(value) {
+  return typeof value === 'string' ? value : '';
 }
 function Edit({
   attributes,
   setAttributes
 }) {
   const {
-    headlinePrefix,
-    headlineAccent,
-    subheadline,
-    slides,
-    mainIndex,
     showHeader = true,
     showNav = true,
     showNavArrows = true
   } = attributes;
+  const headlinePrefix = asRichString(attributes.headlinePrefix);
+  const headlineAccent = asRichString(attributes.headlineAccent);
+  const subheadline = asRichString(attributes.subheadline);
+  const slides = Array.isArray(attributes.slides) ? attributes.slides : [];
+  const mainIndex = Number(attributes.mainIndex) || 0;
   const showArrowsInNav = showNav !== false && showNavArrows !== false;
   const sectionClass = 's2e-transformation s2e-transformation--editor' + (showHeader === false ? ' s2e-transformation--header-off' : '');
   const ref = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
@@ -87,7 +91,7 @@ function Edit({
     className: sectionClass,
     'data-s2e-transformation': '1'
   });
-  const count = slides.length || 1;
+  const count = Math.max(1, slides.length);
   const idx = Math.max(0, Math.min(mainIndex, count - 1));
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (typeof window !== 'undefined' && window.s2eEightReinitInScope && ref.current) {
@@ -95,8 +99,9 @@ function Edit({
     }
   }, [slides, mainIndex, showHeader, showNav, showNavArrows]);
   const updateSlide = (index, patch) => {
-    const nextSlides = slides.map((row, i) => i === index ? {
-      ...row,
+    const base = Array.isArray(slides) ? slides : [];
+    const nextSlides = base.map((row, i) => i === index ? {
+      ...(row && typeof row === 'object' ? row : {}),
       ...patch
     } : row);
     setAttributes({
@@ -104,8 +109,9 @@ function Edit({
     });
   };
   const addSlide = () => {
+    const base = Array.isArray(slides) ? slides : [];
     setAttributes({
-      slides: [...slides, {
+      slides: [...base, {
         beforeId: 0,
         beforeUrl: '',
         afterId: 0,
@@ -116,10 +122,11 @@ function Edit({
     });
   };
   const removeSlide = index => {
-    if (slides.length < 2) {
+    const base = Array.isArray(slides) ? slides : [];
+    if (base.length < 2) {
       return;
     }
-    const nextSlides = slides.filter((_, i) => i !== index);
+    const nextSlides = base.filter((_, i) => i !== index);
     setAttributes({
       slides: nextSlides,
       mainIndex: Math.min(mainIndex, nextSlides.length - 1)
@@ -168,57 +175,61 @@ function Edit({
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
     variant: "primary",
     onClick: addSlide
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add comparison', 'six2eight-elements'))), slides.map((slide, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
-    key: index,
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Comparison', 'six2eight-elements') + ' ' + (index + 1),
-    initialOpen: false
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
-    onSelect: media => updateSlide(index, {
-      beforeId: media.id,
-      beforeUrl: media.url
-    }),
-    allowedTypes: ['image'],
-    value: slide.beforeId,
-    render: ({
-      open
-    }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-      variant: "secondary",
-      onClick: open
-    }, slide.beforeUrl ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Replace before', 'six2eight-elements') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before image', 'six2eight-elements'))
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
-    onSelect: media => updateSlide(index, {
-      afterId: media.id,
-      afterUrl: media.url
-    }),
-    allowedTypes: ['image'],
-    value: slide.afterId,
-    render: ({
-      open
-    }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-      variant: "secondary",
-      onClick: open,
-      style: {
-        marginTop: 8
-      }
-    }, slide.afterUrl ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Replace after', 'six2eight-elements') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After image', 'six2eight-elements'))
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before label', 'six2eight-elements'),
-    value: slide.beforeLabel,
-    onChange: v => updateSlide(index, {
-      beforeLabel: v
-    })
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
-    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After label', 'six2eight-elements'),
-    value: slide.afterLabel,
-    onChange: v => updateSlide(index, {
-      afterLabel: v
-    })
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
-    isDestructive: true,
-    variant: "link",
-    onClick: () => removeSlide(index),
-    disabled: slides.length < 2
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Remove comparison', 'six2eight-elements'))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Add comparison', 'six2eight-elements'))), (Array.isArray(slides) ? slides : []).map((slide, index) => {
+    var _row$beforeLabel, _row$afterLabel;
+    const row = slide && typeof slide === 'object' ? slide : {};
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
+      key: index,
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Comparison', 'six2eight-elements') + ' ' + (index + 1),
+      initialOpen: false
+    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
+      onSelect: media => updateSlide(index, {
+        beforeId: media.id,
+        beforeUrl: media.url
+      }),
+      allowedTypes: ['image'],
+      value: row.beforeId,
+      render: ({
+        open
+      }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+        variant: "secondary",
+        onClick: open
+      }, row.beforeUrl ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Replace before', 'six2eight-elements') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before image', 'six2eight-elements'))
+    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUploadCheck, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.MediaUpload, {
+      onSelect: media => updateSlide(index, {
+        afterId: media.id,
+        afterUrl: media.url
+      }),
+      allowedTypes: ['image'],
+      value: row.afterId,
+      render: ({
+        open
+      }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+        variant: "secondary",
+        onClick: open,
+        style: {
+          marginTop: 8
+        }
+      }, row.afterUrl ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Replace after', 'six2eight-elements') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After image', 'six2eight-elements'))
+    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Before label', 'six2eight-elements'),
+      value: (_row$beforeLabel = row.beforeLabel) !== null && _row$beforeLabel !== void 0 ? _row$beforeLabel : '',
+      onChange: v => updateSlide(index, {
+        beforeLabel: v
+      })
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.TextControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('After label', 'six2eight-elements'),
+      value: (_row$afterLabel = row.afterLabel) !== null && _row$afterLabel !== void 0 ? _row$afterLabel : '',
+      onChange: v => updateSlide(index, {
+        afterLabel: v
+      })
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Button, {
+      isDestructive: true,
+      variant: "link",
+      onClick: () => removeSlide(index),
+      disabled: (Array.isArray(slides) ? slides : []).length < 2
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Remove comparison', 'six2eight-elements')));
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "s2e-transformation__inner"
   }, showHeader !== false ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("header", {
     className: "s2e-transformation__header"
@@ -229,7 +240,7 @@ function Edit({
     className: "s2e-transformation__headline-sans",
     value: headlinePrefix,
     onChange: v => setAttributes({
-      headlinePrefix: v
+      headlinePrefix: v !== null && v !== void 0 ? v : ''
     }),
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('See the', 'six2eight-elements'),
     allowedFormats: []
@@ -238,7 +249,7 @@ function Edit({
     className: "s2e-transformation__headline-serif",
     value: headlineAccent,
     onChange: v => setAttributes({
-      headlineAccent: v
+      headlineAccent: v !== null && v !== void 0 ? v : ''
     }),
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Transformation', 'six2eight-elements'),
     allowedFormats: []
@@ -247,7 +258,7 @@ function Edit({
     className: "s2e-transformation__sub",
     value: subheadline,
     onChange: v => setAttributes({
-      subheadline: v
+      subheadline: v !== null && v !== void 0 ? v : ''
     }),
     placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Supporting copy', 'six2eight-elements')
   })) : null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -262,7 +273,7 @@ function Edit({
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "s2e-transformation__strip",
     "data-s2e-transformation-strip": true
-  }, slides.map((slide, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, (Array.isArray(slides) ? slides : []).map((slide, i) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: 's2e-transformation__cell' + (i === idx ? ' is-active' : ''),
     "data-s2e-slide": true,
     key: i
@@ -314,6 +325,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
 
 
+const DEFAULT_SLIDE = {
+  beforeId: 0,
+  beforeUrl: '',
+  afterId: 0,
+  afterUrl: '',
+  beforeLabel: 'Before',
+  afterLabel: 'After'
+};
+function asRichString(value) {
+  return typeof value === 'string' ? value : '';
+}
 function CompareSave({
   slide
 }) {
@@ -360,19 +382,24 @@ function save({
   attributes
 }) {
   const {
-    headlinePrefix,
-    headlineAccent,
-    subheadline,
-    slides,
     mainIndex,
     showHeader = true,
     showNav = true,
     showNavArrows = true
   } = attributes;
+  const headlinePrefix = asRichString(attributes.headlinePrefix);
+  const headlineAccent = asRichString(attributes.headlineAccent);
+  const subheadline = asRichString(attributes.subheadline);
+  let slides = Array.isArray(attributes.slides) ? attributes.slides : [];
+  if (!slides.length) {
+    slides = [{
+      ...DEFAULT_SLIDE
+    }];
+  }
   const showArrowsInNav = showNav !== false && showNavArrows !== false;
   const sectionClass = 's2e-transformation' + (showHeader === false ? ' s2e-transformation--header-off' : '');
   const count = slides.length || 1;
-  const idx = Math.max(0, Math.min(mainIndex || 0, count - 1));
+  const idx = Math.max(0, Math.min(Number(mainIndex) || 0, count - 1));
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
     className: sectionClass,
     'data-s2e-transformation': '1',
@@ -617,4 +644,3 @@ __webpack_require__.r(__webpack_exports__);
 
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map

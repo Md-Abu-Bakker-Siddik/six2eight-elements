@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import { isEmpty } from '@wordpress/rich-text';
 import {
 	useBlockProps,
 	RichText,
@@ -13,7 +12,12 @@ import {
 	ToggleControl,
 	TextControl,
 } from '@wordpress/components';
-import { stripRichTextSoftBreaks } from './utils';
+import {
+	isRichTextEmpty,
+	normalizeRichTextValue,
+	normalizeStep,
+	stripRichTextSoftBreaks,
+} from './utils';
 
 const SINGLE_LINE_RICH_TEXT_PROPS = {
 	allowedFormats: [],
@@ -21,16 +25,18 @@ const SINGLE_LINE_RICH_TEXT_PROPS = {
 };
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { accentText, headingText, steps } = attributes;
-	const stepList = Array.isArray(steps) ? steps : [];
+	const { steps } = attributes;
+	const accentText = normalizeRichTextValue(attributes.accentText);
+	const headingText = normalizeRichTextValue(attributes.headingText);
+	const stepList = Array.isArray(steps) ? steps.map(normalizeStep) : [];
 
 	const isSelected = useSelect(
 		(select) => select(blockEditorStore).isBlockSelected(clientId),
 		[clientId]
 	);
 
-	const showAccentField = !isEmpty(accentText) || isSelected;
-	const showHeadingField = !isEmpty(headingText) || isSelected;
+	const showAccentField = !isRichTextEmpty(attributes.accentText) || isSelected;
+	const showHeadingField = !isRichTextEmpty(attributes.headingText) || isSelected;
 	const showHeader = showAccentField || showHeadingField;
 
 	const blockProps = useBlockProps({
@@ -116,7 +122,7 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 								<div className="s2e-project-steps__body">
 									<TextControl
 										label={__('Step number (optional)', 'six2eight-elements')}
-										value={step.number}
+										value={step.number ?? ''}
 										onChange={(v) => updateStep(index, { number: v })}
 									/>
 									<RichText
@@ -133,7 +139,9 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 										tagName="p"
 										className="s2e-project-steps__step-desc"
 										value={step.description}
-										onChange={(v) => updateStep(index, { description: v })}
+										onChange={(v) =>
+											updateStep(index, { description: v ?? '' })
+										}
 										placeholder={__('Description', 'six2eight-elements')}
 									/>
 									<ToggleControl

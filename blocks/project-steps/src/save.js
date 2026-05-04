@@ -1,17 +1,24 @@
 import { useBlockProps, RichText } from '@wordpress/block-editor';
-import { isEmpty } from '@wordpress/rich-text';
-import { stripRichTextSoftBreaks } from './utils';
+import {
+	isRichTextEmpty,
+	normalizeRichTextValue,
+	normalizeStep,
+	stripRichTextSoftBreaks,
+} from './utils';
 
 export default function save({ attributes }) {
-	const { accentText, headingText, steps } = attributes;
-	const stepList = Array.isArray(steps) ? steps : [];
+	const attrs = attributes && typeof attributes === 'object' ? attributes : {};
+	const accentText = normalizeRichTextValue(attrs.accentText);
+	const headingText = normalizeRichTextValue(attrs.headingText);
+	const steps = attrs.steps;
+	const stepList = Array.isArray(steps) ? steps.map(normalizeStep) : [];
 
 	const blockProps = useBlockProps.save({
 		className: 's2e-project-steps',
 	});
 
-	const hasAccent = !isEmpty(accentText);
-	const hasHeading = !isEmpty(headingText);
+	const hasAccent = !isRichTextEmpty(attrs.accentText);
+	const hasHeading = !isRichTextEmpty(attrs.headingText);
 	const showHeader = hasAccent || hasHeading;
 
 	return (
@@ -57,7 +64,7 @@ export default function save({ attributes }) {
 									<RichText.Content
 										tagName="p"
 										className="s2e-project-steps__step-desc"
-										value={step.description}
+										value={stripRichTextSoftBreaks(step.description)}
 									/>
 								</div>
 							</div>

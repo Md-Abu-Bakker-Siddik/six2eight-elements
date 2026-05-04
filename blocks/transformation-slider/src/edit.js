@@ -16,8 +16,9 @@ import {
 } from '@wordpress/components';
 
 function ComparePreview({ slide }) {
-	const before = slide.beforeUrl;
-	const after = slide.afterUrl;
+	const safe = slide && typeof slide === 'object' ? slide : {};
+	const before = safe.beforeUrl;
+	const after = safe.afterUrl;
 
 	return (
 		<div className="s2e-transformation__compare s2e-compare" data-s2e-compare="1">
@@ -37,27 +38,32 @@ function ComparePreview({ slide }) {
 					</span>
 				</div>
 				<span className="s2e-transformation__badge s2e-transformation__badge--before">
-					{slide.beforeLabel || __('Before', 'six2eight-elements')}
+					{safe.beforeLabel || __('Before', 'six2eight-elements')}
 				</span>
 				<span className="s2e-transformation__badge s2e-transformation__badge--after">
-					{slide.afterLabel || __('After', 'six2eight-elements')}
+					{safe.afterLabel || __('After', 'six2eight-elements')}
 				</span>
 			</div>
 		</div>
 	);
 }
 
+function asRichString(value) {
+	return typeof value === 'string' ? value : '';
+}
+
 export default function Edit({ attributes, setAttributes }) {
 	const {
-		headlinePrefix,
-		headlineAccent,
-		subheadline,
-		slides,
-		mainIndex,
 		showHeader = true,
 		showNav = true,
 		showNavArrows = true,
 	} = attributes;
+
+	const headlinePrefix = asRichString(attributes.headlinePrefix);
+	const headlineAccent = asRichString(attributes.headlineAccent);
+	const subheadline = asRichString(attributes.subheadline);
+	const slides = Array.isArray(attributes.slides) ? attributes.slides : [];
+	const mainIndex = Number(attributes.mainIndex) || 0;
 
 	const showArrowsInNav = showNav !== false && showNavArrows !== false;
 
@@ -72,7 +78,7 @@ export default function Edit({ attributes, setAttributes }) {
 		'data-s2e-transformation': '1',
 	});
 
-	const count = slides.length || 1;
+	const count = Math.max(1, slides.length);
 	const idx = Math.max(0, Math.min(mainIndex, count - 1));
 
 	useEffect(() => {
@@ -82,16 +88,18 @@ export default function Edit({ attributes, setAttributes }) {
 	}, [slides, mainIndex, showHeader, showNav, showNavArrows]);
 
 	const updateSlide = (index, patch) => {
-		const nextSlides = slides.map((row, i) =>
-			i === index ? { ...row, ...patch } : row
+		const base = Array.isArray(slides) ? slides : [];
+		const nextSlides = base.map((row, i) =>
+			i === index ? { ...(row && typeof row === 'object' ? row : {}), ...patch } : row
 		);
 		setAttributes({ slides: nextSlides });
 	};
 
 	const addSlide = () => {
+		const base = Array.isArray(slides) ? slides : [];
 		setAttributes({
 			slides: [
-				...slides,
+				...base,
 				{
 					beforeId: 0,
 					beforeUrl: '',
@@ -105,10 +113,11 @@ export default function Edit({ attributes, setAttributes }) {
 	};
 
 	const removeSlide = (index) => {
-		if (slides.length < 2) {
+		const base = Array.isArray(slides) ? slides : [];
+		if (base.length < 2) {
 			return;
 		}
-		const nextSlides = slides.filter((_, i) => i !== index);
+		const nextSlides = base.filter((_, i) => i !== index);
 		setAttributes({
 			slides: nextSlides,
 			mainIndex: Math.min(mainIndex, nextSlides.length - 1),
@@ -161,7 +170,9 @@ export default function Edit({ attributes, setAttributes }) {
 						{__('Add comparison', 'six2eight-elements')}
 					</Button>
 				</PanelBody>
-				{slides.map((slide, index) => (
+				{(Array.isArray(slides) ? slides : []).map((slide, index) => {
+					const row = slide && typeof slide === 'object' ? slide : {};
+					return (
 					<PanelBody
 						key={index}
 						title={__('Comparison', 'six2eight-elements') + ' ' + (index + 1)}
@@ -176,10 +187,10 @@ export default function Edit({ attributes, setAttributes }) {
 									})
 								}
 								allowedTypes={['image']}
-								value={slide.beforeId}
+								value={row.beforeId}
 								render={({ open }) => (
 									<Button variant="secondary" onClick={open}>
-										{slide.beforeUrl
+										{row.beforeUrl
 											? __('Replace before', 'six2eight-elements')
 											: __('Before image', 'six2eight-elements')}
 									</Button>
@@ -195,10 +206,10 @@ export default function Edit({ attributes, setAttributes }) {
 									})
 								}
 								allowedTypes={['image']}
-								value={slide.afterId}
+								value={row.afterId}
 								render={({ open }) => (
 									<Button variant="secondary" onClick={open} style={{ marginTop: 8 }}>
-										{slide.afterUrl
+										{row.afterUrl
 											? __('Replace after', 'six2eight-elements')
 											: __('After image', 'six2eight-elements')}
 									</Button>
@@ -207,24 +218,25 @@ export default function Edit({ attributes, setAttributes }) {
 						</MediaUploadCheck>
 						<TextControl
 							label={__('Before label', 'six2eight-elements')}
-							value={slide.beforeLabel}
+							value={row.beforeLabel ?? ''}
 							onChange={(v) => updateSlide(index, { beforeLabel: v })}
 						/>
 						<TextControl
 							label={__('After label', 'six2eight-elements')}
-							value={slide.afterLabel}
+							value={row.afterLabel ?? ''}
 							onChange={(v) => updateSlide(index, { afterLabel: v })}
 						/>
 						<Button
 							isDestructive
 							variant="link"
 							onClick={() => removeSlide(index)}
-							disabled={slides.length < 2}
+							disabled={(Array.isArray(slides) ? slides : []).length < 2}
 						>
 							{__('Remove comparison', 'six2eight-elements')}
 						</Button>
 					</PanelBody>
-				))}
+					);
+				})}
 			</InspectorControls>
 
 			<div className="s2e-transformation__inner">
@@ -235,7 +247,7 @@ export default function Edit({ attributes, setAttributes }) {
 								tagName="span"
 								className="s2e-transformation__headline-sans"
 								value={headlinePrefix}
-								onChange={(v) => setAttributes({ headlinePrefix: v })}
+								onChange={(v) => setAttributes({ headlinePrefix: v ?? '' })}
 								placeholder={__('See the', 'six2eight-elements')}
 								allowedFormats={[]}
 							/>
@@ -243,7 +255,7 @@ export default function Edit({ attributes, setAttributes }) {
 								tagName="span"
 								className="s2e-transformation__headline-serif"
 								value={headlineAccent}
-								onChange={(v) => setAttributes({ headlineAccent: v })}
+								onChange={(v) => setAttributes({ headlineAccent: v ?? '' })}
 								placeholder={__('Transformation', 'six2eight-elements')}
 								allowedFormats={[]}
 							/>
@@ -252,7 +264,7 @@ export default function Edit({ attributes, setAttributes }) {
 							tagName="p"
 							className="s2e-transformation__sub"
 							value={subheadline}
-							onChange={(v) => setAttributes({ subheadline: v })}
+							onChange={(v) => setAttributes({ subheadline: v ?? '' })}
 							placeholder={__('Supporting copy', 'six2eight-elements')}
 						/>
 					</header>
@@ -268,7 +280,7 @@ export default function Edit({ attributes, setAttributes }) {
 					<div className="s2e-transformation__rack" data-s2e-transformation-rack>
 						<div className="s2e-transformation__viewport" data-s2e-transformation-viewport>
 							<div className="s2e-transformation__strip" data-s2e-transformation-strip>
-								{slides.map((slide, i) => (
+								{(Array.isArray(slides) ? slides : []).map((slide, i) => (
 									<div
 										className={
 											's2e-transformation__cell' + (i === idx ? ' is-active' : '')

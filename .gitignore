@@ -1,6 +1,9 @@
 # Dependencies (do not commit; may contain large vendor data)
 **/node_modules/
 
+# Production builds should not ship source maps
+**/blocks/**/build/*.map
+
 # Logs & OS
 npm-debug.log*
 .DS_Store

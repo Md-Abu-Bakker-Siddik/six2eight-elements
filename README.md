@@ -100,6 +100,18 @@ npm run build
 
 Committed sites should include the generated `build/` output (or run the build in CI before deploy).
 
+Block builds use `webpack.config.js` with **no source maps** so client zips stay smaller; editor behavior is unchanged.
+
+### Packaging for a client (small zip)
+
+The repo root `.distignore` lists folders that are not needed on a live site (`node_modules`, block `src/`, lockfiles, maps, etc.). If you use [WP-CLI](https://wp-cli.org/) with the [dist-archive](https://developer.wordpress.org/cli/commands/dist-archive/) command, from `wp-content/plugins` run:
+
+```bash
+wp dist-archive six2eight-elements six2eight-elements.zip
+```
+
+That produces a zip the client can upload under **Plugins → Add New → Upload**. Without WP-CLI, zip the same paths manually and omit anything listed in `.distignore`.
+
 ### PHP-only changes
 
 Updating `includes/*.php`, `widgets/*.php`, or `assets/css/style.css` does not require `npm run build`.

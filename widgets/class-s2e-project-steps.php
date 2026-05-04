@@ -548,7 +548,7 @@ class S2E_Project_Steps extends Widget_Base {
 							</div>
 							<div class="s2e-project-steps__body">
 								<?php if ( ! empty( $item['step_title'] ) ) : ?>
-									<h3 class="s2e-project-steps__step-title"><?php echo esc_html( $item['step_title'] ); ?></h3>
+									<h4 class="s2e-project-steps__step-title"><?php echo esc_html( $item['step_title'] ); ?></h4>
 								<?php endif; ?>
 								<?php if ( ! empty( $item['step_description'] ) ) : ?>
 									<p class="s2e-project-steps__step-desc"><?php echo esc_html( $item['step_description'] ); ?></p>
