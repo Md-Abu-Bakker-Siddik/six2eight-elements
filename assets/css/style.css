@@ -282,6 +282,14 @@
 	transition: transform 0.5s ease;
 }
 
+/* Prevent a visible "hiccup" during clone->real loop remap. */
+.s2e-transformation__strip.s2e-loop-jump [data-s2e-slide],
+.s2e-transformation__strip.s2e-loop-jump .s2e-transformation__compare,
+.s2e-transformation__strip.s2e-loop-jump .s2e-compare__inner,
+.s2e-transformation__strip.s2e-loop-jump .s2e-compare__layer img {
+	transition: none !important;
+}
+
 /* Center mode: same slide width; scale + opacity on active */
 [data-s2e-slide] {
 	flex: 0 0 auto;

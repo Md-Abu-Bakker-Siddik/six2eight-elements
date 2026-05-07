@@ -205,8 +205,9 @@
 		}
 
 		/**
-		 * Clone first and last slides so the track can loop without visible gaps.
-		 * Order: [clone of last] [real 0] … [real n-1] [clone of first]
+		 * Clone full slide sets on both sides so center-mode peeks
+		 * never expose empty space while looping.
+		 * Order: [all clones] [real slides] [all clones]
 		 */
 		function prepareSlideClone(node) {
 			var cloneEl = node.cloneNode(true);
@@ -224,11 +225,14 @@
 		var len = count;
 
 		if (useLoop) {
-			var firstOriginal = originalCells[0];
-			var leadingLastClone = prepareSlideClone(originalCells[count - 1]);
-			var trailingFirstClone = prepareSlideClone(originalCells[0]);
-			strip.insertBefore(leadingLastClone, firstOriginal);
-			strip.appendChild(trailingFirstClone);
+			var prependFrag = document.createDocumentFragment();
+			var appendFrag = document.createDocumentFragment();
+			for (var cloneI = 0; cloneI < count; cloneI += 1) {
+				prependFrag.appendChild(prepareSlideClone(originalCells[cloneI]));
+				appendFrag.appendChild(prepareSlideClone(originalCells[cloneI]));
+			}
+			strip.insertBefore(prependFrag, originalCells[0] || null);
+			strip.appendChild(appendFrag);
 			cells = Array.prototype.slice.call(strip.querySelectorAll("[data-s2e-slide]"));
 			len = cells.length;
 			var initSlide = parseInt(section.getAttribute("data-s2e-initial-slide") || "0", 10);
@@ -238,7 +242,7 @@
 			if (initSlide > count - 1) {
 				initSlide = count - 1;
 			}
-			slideIndex = initSlide + 1;
+			slideIndex = count + initSlide;
 		} else {
 			cells = originalCells.slice();
 			slideIndex = 0;
@@ -249,6 +253,12 @@
 		var stripTransitionSmooth = "transform 0.7s cubic-bezier(0.25, 0.82, 0.25, 1)";
 		var skipTransitionEnd = false;
 		var loopJumpBusy = false;
+		var slideMotionLock = false;
+		var slideMotionLockTimer = null;
+
+		function setLoopJumpState(isJumping) {
+			strip.classList.toggle("s2e-loop-jump", !!isJumping);
+		}
 
 		function getStripTranslateX() {
 			var style = window.getComputedStyle(strip);
@@ -273,13 +283,8 @@
 			if (!useLoop) {
 				return slideIndex + 1;
 			}
-			if (slideIndex === 0) {
-				return count;
-			}
-			if (slideIndex === len - 1) {
-				return 1;
-			}
-			return slideIndex;
+			var logical = ((slideIndex - count) % count + count) % count;
+			return logical + 1;
 		}
 
 		function updateFraction() {
@@ -312,7 +317,7 @@
 		/**
 		 * Center the active slide in the viewport.
 		 * - Normal: move by delta from current translate (no snap to 0) so transitions stay smooth.
-		 * - Instant: reset to 0, measure absolute translate (used after clone loop jump).
+		 * - Instant: apply the remap with transition disabled (used after clone loop jump).
 		 * - Clamp is skipped on clone endpoints so the loop jump does not fight the viewport clamp.
 		 */
 		function updateSlider(instant) {
@@ -324,38 +329,6 @@
 
 			var vRect = viewport.getBoundingClientRect();
 			var vw = vRect.width;
-			var onCloneEdge = useLoop && (slideIndex === 0 || slideIndex === len - 1);
-
-			if (instant) {
-				strip.style.transition = "none";
-				strip.style.transform = "translate3d(0,0,0)";
-				void strip.offsetWidth;
-				var a0 = active.getBoundingClientRect();
-				var s0 = strip.getBoundingClientRect();
-				var sll0 = s0.left - vRect.left;
-				var slr0 = s0.right - vRect.left;
-				var center0 = vw * 0.5 - a0.width * 0.5;
-				var ideal0 = center0 - (a0.left - vRect.left);
-				var min0 = -sll0;
-				var max0 = vw - slr0;
-				var offset =
-					onCloneEdge || max0 < min0
-						? ideal0
-						: clamp(ideal0, min0, max0);
-				skipTransitionEnd = true;
-				strip.style.transform = "translate3d(" + offset + "px,0,0)";
-				void strip.offsetWidth;
-				strip.style.transition = stripTransitionSmooth;
-				requestAnimationFrame(function () {
-					requestAnimationFrame(function () {
-						requestAnimationFrame(function () {
-							skipTransitionEnd = false;
-						});
-					});
-				});
-				return;
-			}
-
 			var aRect = active.getBoundingClientRect();
 			var curX = getStripTranslateX();
 			var center = vw * 0.5 - aRect.width * 0.5;
@@ -373,6 +346,22 @@
 				var mn = -sll1;
 				var mx = vw - slr1;
 				nextX = mx < mn ? ideal1 : clamp(ideal1, mn, mx);
+			}
+
+			if (instant) {
+				skipTransitionEnd = true;
+				setLoopJumpState(true);
+				strip.style.transition = "none";
+				strip.style.transform = "translate3d(" + nextX + "px,0,0)";
+				void strip.offsetWidth;
+				strip.style.transition = stripTransitionSmooth;
+				requestAnimationFrame(function () {
+					requestAnimationFrame(function () {
+						setLoopJumpState(false);
+						skipTransitionEnd = false;
+					});
+				});
+				return;
 			}
 
 			strip.style.transition = stripTransitionSmooth;
@@ -393,10 +382,33 @@
 			}
 		}
 
+		function clearSlideMotionLockTimer() {
+			if (slideMotionLockTimer) {
+				clearTimeout(slideMotionLockTimer);
+				slideMotionLockTimer = null;
+			}
+		}
+
+		function releaseSlideMotionLock() {
+			clearSlideMotionLockTimer();
+			slideMotionLock = false;
+		}
+
+		function lockSlideMotion() {
+			slideMotionLock = true;
+			clearSlideMotionLockTimer();
+			// Fallback in case transitionend does not fire.
+			slideMotionLockTimer = window.setTimeout(releaseSlideMotionLock, 1100);
+		}
+
 		function go(delta) {
 			if (count <= 1) {
 				return;
 			}
+			if (loopJumpBusy || slideMotionLock) {
+				return;
+			}
+			lockSlideMotion();
 			var next = slideIndex + delta;
 			if (useLoop) {
 				next = clamp(next, 0, len - 1);
@@ -414,26 +426,31 @@
 			if (e.target !== strip || e.propertyName !== "transform") {
 				return;
 			}
+			if (!loopJumpBusy) {
+				releaseSlideMotionLock();
+			}
 			if (skipTransitionEnd || !useLoop || loopJumpBusy) {
 				return;
 			}
-			if (slideIndex === len - 1) {
+			if (slideIndex >= count * 2) {
 				loopJumpBusy = true;
-				slideIndex = 1;
+				slideIndex -= count;
 				updateFraction();
 				updateSlider(true);
 				initCompareOnActiveSlide();
 				requestAnimationFrame(function () {
 					loopJumpBusy = false;
+					releaseSlideMotionLock();
 				});
-			} else if (slideIndex === 0) {
+			} else if (slideIndex < count) {
 				loopJumpBusy = true;
-				slideIndex = len - 2;
+				slideIndex += count;
 				updateFraction();
 				updateSlider(true);
 				initCompareOnActiveSlide();
 				requestAnimationFrame(function () {
 					loopJumpBusy = false;
+					releaseSlideMotionLock();
 				});
 			}
 		}
@@ -619,6 +636,8 @@
 			imgListeners = [];
 			strip.style.transform = "";
 			strip.style.transition = "";
+			setLoopJumpState(false);
+			releaseSlideMotionLock();
 		};
 	}
 
