@@ -5,12 +5,15 @@
 :root {
 	--s2e-brand-navy: #1b3d54;
 	--s2e-transformation-frame: 7px;
-	--s2e-transformation-radius: 20px;
+	--s2e-transformation-side-frame: 15px;
+	--s2e-transformation-center-border-radius: 32px;
+	--s2e-transformation-center-image-radius: 20px;
 	--s2e-transformation-rack-gap: 0px;
 	--s2e-transformation-badge-bg: var(--s2e-brand-navy);
 	--s2e-transformation-badge-fg: #ffffff;
 	--s2e-transformation-section-bg: #f4f7f9;
-	--s2e-transformation-peek-radius: 20px;
+	--s2e-transformation-side-border-radius: 32px;
+	--s2e-transformation-side-image-radius: 20px;
 	--s2e-transformation-side-scale: 0.85;
 	--s2e-transformation-center-scale: 1.05;
 	--s2e-transformation-slide-dim-opacity: 0.6;
@@ -323,11 +326,15 @@
 }
 
 .s2e-transformation__cell.is-active .s2e-transformation__compare {
-	border-radius: var(--s2e-transformation-radius);
-	background: linear-gradient(90deg, #0B212F 0%, #236995 100%);
+	border-radius: var(--s2e-transformation-center-border-radius);
+	background: linear-gradient(180deg, #141B34 0%, #1B5174 100%);
 	padding: 18px;
 	overflow: hidden;
 	box-sizing: border-box;
+}
+
+.s2e-transformation__cell.is-active {
+	padding-block: 5px;
 }
 
 .s2e-transformation__cell:not(.is-active) .s2e-transformation__compare {
@@ -337,7 +344,9 @@
 }
 
 .s2e-transformation__cell:not(.is-active) .s2e-compare__inner {
-	border-radius: var(--s2e-transformation-peek-radius);
+	border-radius: var(--s2e-transformation-side-border-radius);
+	border: var(--s2e-transformation-side-frame) solid #ffffff;
+	box-sizing: border-box;
 	overflow: hidden;
 	box-shadow: 0 14px 40px rgba(27, 61, 84, 0.14);
 	pointer-events: auto;
@@ -427,7 +436,7 @@
 }
 
 .s2e-transformation__cell.is-active .s2e-compare__inner {
-	border-radius: calc(var(--s2e-transformation-radius) - var(--s2e-transformation-frame));
+	border-radius: var(--s2e-transformation-center-image-radius);
 	cursor: ew-resize;
 	user-select: none;
 	-webkit-user-select: none;
@@ -452,14 +461,14 @@
 }
 
 .s2e-transformation__cell.is-active .s2e-compare__layer img {
-	border-radius: calc(var(--s2e-transformation-radius) - var(--s2e-transformation-frame));
+	border-radius: var(--s2e-transformation-center-image-radius);
 	-webkit-user-drag: none;
 	user-drag: none;
 	pointer-events: auto;
 }
 
 .s2e-transformation__cell:not(.is-active) .s2e-compare__layer img {
-	border-radius: var(--s2e-transformation-peek-radius);
+	border-radius: var(--s2e-transformation-side-image-radius);
 }
 
 .s2e-compare__after {
@@ -489,10 +498,10 @@
 	top: 0;
 	bottom: 0;
 	left: 50%;
-	width: 3px;
-	margin-left: -1.5px;
+	width: 5px;
+	margin-left: -2.5px;
 	background: #fff;
-	box-shadow: 0 0 0 1px var(--s2e-brand-navy, #1b3d54);
+	box-shadow: none;
 	z-index: 0;
 }
 
@@ -502,10 +511,13 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 46px;
-	height: 46px;
-	border-radius: 999px;
-	background: #fff;
+	width: 40px;
+	height: 40px;
+	aspect-ratio: 1 / 1;
+	border-radius: 50%;
+	background: linear-gradient(180deg, #ffffff 0%, #f3f3f3 52%, #999999 100%);
+	border: 0;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 	font-weight: 600;
 	color: #141B34;
 	font-size: 1rem;
@@ -516,10 +528,14 @@
 }
 
 .s2e-compare__handle-arrows {
-	letter-spacing: 0.35em;
-	margin-right: -0.2em;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: auto;
+	letter-spacing: 0.24em;
+	margin-right: -0.24em;
 	font-family: var(--s2e-font-sans);
-	font-weight: 600;
+	font-weight: 800;
 }
 
 .s2e-transformation__badge {
@@ -709,6 +725,16 @@
 	width: 100%;
 	max-width: 100%;
 	min-width: 0;
+}
+
+/* Keep center radius driven by CSS variables in Elementor (avoids stale inline radius overrides). */
+.elementor-widget-s2e-transformation-slider .s2e-transformation__cell.is-active .s2e-transformation__compare {
+	border-radius: var(--s2e-transformation-center-border-radius) !important;
+}
+
+.elementor-widget-s2e-transformation-slider .s2e-transformation__cell.is-active .s2e-compare__inner,
+.elementor-widget-s2e-transformation-slider .s2e-transformation__cell.is-active .s2e-compare__layer img {
+	border-radius: var(--s2e-transformation-center-image-radius) !important;
 }
 
 @media (max-width: 767px) {

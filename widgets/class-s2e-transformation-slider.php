@@ -451,12 +451,11 @@ class S2E_Transformation_Slider extends Widget_Base {
 				'type'       => Controls_Manager::SLIDER,
 				'size_units' => array( 'px' ),
 				'default'    => array(
-					'size' => 20,
+					'size' => 32,
 					'unit' => 'px',
 				),
 				'selectors'  => array(
-					'{{WRAPPER}} .s2e-transformation__cell.is-active .s2e-transformation__compare' => 'border-radius: {{SIZE}}{{UNIT}};',
-					'{{WRAPPER}} .s2e-transformation' => '--s2e-transformation-radius: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .s2e-transformation' => '--s2e-transformation-center-border-radius: {{SIZE}}{{UNIT}}; --s2e-transformation-center-image-radius: {{SIZE}}{{UNIT}};',
 				),
 			)
 		);
